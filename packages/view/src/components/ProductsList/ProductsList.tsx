@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
-import { products } from '../../../mockData'
-import ProductCard from '../ProductCard/ProductCard'
+import { products } from '@view/mockData'
+import { ProductCard } from '../ProductCard'
 
 import styles from './ProductsList.module.scss'
 
@@ -9,7 +9,8 @@ interface ProductsListProps {
     onOpenChat: (productId: number) => void
 }
 
-const ProductsList: FC<ProductsListProps> = ({ onOpenChat }) => {
+export const ProductsList: FC<ProductsListProps> = (props) => {
+    const { onOpenChat } = props
     return (
         <div className={styles.main_content}>
             <h2>Карточки товаров</h2>
@@ -25,5 +26,3 @@ const ProductsList: FC<ProductsListProps> = ({ onOpenChat }) => {
         </div>
     )
 }
-
-export default ProductsList

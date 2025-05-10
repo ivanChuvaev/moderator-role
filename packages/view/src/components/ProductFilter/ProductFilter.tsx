@@ -1,6 +1,6 @@
-import React from 'react'
+import { FC } from 'react'
 
-const ProductFilter: React.FC<any> = () => {
+export const ProductFilter: FC<any> = () => {
     return (
         <div>
             <h1>Фильтры</h1>
@@ -12,5 +12,3 @@ const ProductFilter: React.FC<any> = () => {
         </div>
     )
 }
-
-export default ProductFilter

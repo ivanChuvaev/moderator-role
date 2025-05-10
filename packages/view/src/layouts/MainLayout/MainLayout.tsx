@@ -1,8 +1,8 @@
 import { FC } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import Content from '../../components/Content/Content'
-import Sidebar from '../../components/Sidebar/Sidebar'
+import { Content } from '../../components/Content/Content'
+import { Sidebar } from '../../components/Sidebar/Sidebar'
 
 import styles from './MainLayout.module.scss'
 

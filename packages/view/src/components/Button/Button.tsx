@@ -11,7 +11,7 @@ interface ButtonProps {
     onClick?: () => void
 }
 
-const Button: React.FC<ButtonProps> = ({
+export const Button: React.FC<ButtonProps> = ({
     label,
     variant = 'primary',
     onClick,
@@ -24,5 +24,3 @@ const Button: React.FC<ButtonProps> = ({
         </button>
     )
 }
-
-export default Button

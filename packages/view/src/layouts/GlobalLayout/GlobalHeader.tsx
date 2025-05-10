@@ -1,11 +1,9 @@
-import React from 'react'
+import { FC } from 'react'
 import { Link } from 'react-router-dom'
 
-import styles from './Header.module.scss'
+import styles from './GlobalHeader.module.scss'
 
-interface HeaderProps {}
-
-export const Header: React.FC<HeaderProps> = () => {
+export const GlobalHeader: FC = () => {
     return (
         <header className={styles.header}>
             <div className={styles.header_container}>
@@ -29,5 +27,3 @@ export const Header: React.FC<HeaderProps> = () => {
         </header>
     )
 }
-
-export default Header

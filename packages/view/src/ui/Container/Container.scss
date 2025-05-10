@@ -1,0 +1,10 @@
+.ui-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ui-container-content {
+    flex-grow: 1;
+    max-width: 1200px;
+}

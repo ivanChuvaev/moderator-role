@@ -1,10 +1,8 @@
-import React from 'react'
+import { FC } from 'react'
 
-import styles from './Footer.module.scss'
+import styles from './GlobalFooter.module.scss'
 
-interface FooterProps {}
-
-export const Footer: React.FC<FooterProps> = () => {
+export const GlobalFooter: FC = () => {
     return (
         <footer className={styles.footer}>
             <div className={styles.footer_container}>
@@ -32,5 +30,3 @@ export const Footer: React.FC<FooterProps> = () => {
         </footer>
     )
 }
-
-export default Footer

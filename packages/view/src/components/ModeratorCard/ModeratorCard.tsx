@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { moderatorData, personData } from '../../../mockData'
-import Avatar from '../Avatar/Avatar'
-import Button from '../Button/Button'
+import { moderatorData, personData } from '@view/mockData'
+import { Avatar } from '../Avatar'
+import { Button } from '../Button'
 
 import styles from './ModeratorCard.module.scss'
 
@@ -11,14 +11,12 @@ interface ModeratorCardProps {
     onFire?: (moderatorId: number) => void
 }
 
-const ModeratorCard: React.FC<ModeratorCardProps> = ({
+export const ModeratorCard: React.FC<ModeratorCardProps> = ({
     moderatorId,
     onFire,
 }) => {
     const moderator = moderatorData.find((m) => m.person_id === moderatorId)
     const person = personData.find((p) => p.id === moderatorId)
-
-    console.log(moderator, person)
 
     if (!moderator || !person) {
         return <div className={styles.notFound}>Модератор не найден</div>
@@ -166,5 +164,3 @@ const ModeratorCard: React.FC<ModeratorCardProps> = ({
         </div>
     )
 }
-
-export default ModeratorCard

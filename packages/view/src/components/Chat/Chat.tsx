@@ -7,8 +7,9 @@ import {
     moderatorData,
     personData,
     chatMessageData,
-} from '../../../mockData'
-import Button from '../Button/Button'
+} from '@view/mockData'
+
+import { Button } from '../Button'
 
 import styles from './Chat.module.scss'
 
@@ -16,7 +17,7 @@ interface ChatProps {
     productId?: number
 }
 
-const Chat: FC<ChatProps> = ({ productId }) => {
+export const Chat: FC<ChatProps> = ({ productId }) => {
     const navigate = useNavigate()
 
     const currentProduct = products.find((p) => p.id === productId)
@@ -127,5 +128,3 @@ const Chat: FC<ChatProps> = ({ productId }) => {
         </main>
     )
 }
-
-export default Chat

@@ -6,7 +6,7 @@ import {
     sellerData,
     personData,
     chatMessageData,
-} from '../../../mockData'
+} from '@view/mockData'
 
 import styles from './ChatCard.module.scss'
 
@@ -15,7 +15,7 @@ interface ChatCardProps {
     onClick?: () => void
 }
 
-const ChatCard: React.FC<ChatCardProps> = ({ productId }) => {
+export const ChatCard: React.FC<ChatCardProps> = ({ productId }) => {
     const navigate = useNavigate()
     const product = products.find((p) => p.id === productId)
 
@@ -79,5 +79,3 @@ const ChatCard: React.FC<ChatCardProps> = ({ productId }) => {
         </div>
     )
 }
-
-export default ChatCard

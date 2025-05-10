@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { Product } from '../../types'
-import Button from '../Button/Button'
+import { Button } from '../Button'
 
 import styles from './ProductCard.module.scss'
 
@@ -11,7 +11,10 @@ interface ProductCardProps {
     onOpenChat: (productId: number) => void
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenChat }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({
+    product,
+    onOpenChat,
+}) => {
     return (
         <div className={styles.product_card_wrapper}>
             <Link to={`/product/${product.id}`}>
@@ -46,5 +49,3 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenChat }) => {
         </div>
     )
 }
-
-export default ProductCard

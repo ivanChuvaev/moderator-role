@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
-import ChatsList from '../ChatsList/ChatsList'
-import ProductFilter from '../Filter/ProductFilter'
+import { ChatsList } from '../ChatsList'
+import { ProductFilter } from '../ProductFilter/ProductFilter'
 
 import styles from './Sidebar.module.scss'
 
@@ -10,12 +10,10 @@ interface SidebarProps {
     showChats: boolean
 }
 
-const Sidebar: FC<SidebarProps> = ({ width = '300px', showChats }) => {
+export const Sidebar: FC<SidebarProps> = ({ width = '300px', showChats }) => {
     return (
         <div className={styles.sidebar} style={{ width }}>
             {showChats ? <ChatsList /> : <ProductFilter />}
         </div>
     )
 }
-
-export default Sidebar

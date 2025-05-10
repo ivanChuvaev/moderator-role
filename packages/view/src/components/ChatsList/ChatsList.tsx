@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import ChatCard from '../ChatCard/ChatCard'
+import { ChatCard } from '../ChatCard'
 
 import styles from './ChatsList.module.scss'
 
@@ -8,10 +8,10 @@ interface ContentProps {
     width?: string
 }
 
-const ChatsList: FC<ContentProps> = () => {
+export const ChatsList: FC<ContentProps> = () => {
     return (
         <div className={styles.main_content}>
-            <h2>Список чатов</h2>
+            <h2 className={styles.title}>Список чатов</h2>
             <div className={styles.chats_container}>
                 <div>
                     <ChatCard productId={1} />
@@ -22,5 +22,3 @@ const ChatsList: FC<ContentProps> = () => {
         </div>
     )
 }
-
-export default ChatsList

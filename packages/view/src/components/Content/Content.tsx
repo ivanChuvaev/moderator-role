@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
-import Chat from '../Chat/Chat'
-import ProductsList from '../ProductsList/ProductsList'
+import { Chat } from '../Chat'
+import { ProductsList } from '../ProductsList'
 
 import styles from './Content.module.scss'
 
@@ -11,7 +11,8 @@ interface ContentProps {
     onOpenChat: (productId: number) => void
 }
 
-const Content: FC<ContentProps> = ({ showChat, onOpenChat, productId }) => {
+export const Content: FC<ContentProps> = (props) => {
+    const { showChat, productId, onOpenChat } = props
     return (
         <div className={styles.main_content}>
             {showChat && productId ? (
@@ -22,5 +23,3 @@ const Content: FC<ContentProps> = ({ showChat, onOpenChat, productId }) => {
         </div>
     )
 }
-
-export default Content

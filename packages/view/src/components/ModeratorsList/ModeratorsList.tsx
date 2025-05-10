@@ -1,15 +1,13 @@
 import { FC } from 'react'
 
-import { moderatorData } from '../../../mockData'
-import ModeratorCard from '../ModeratorCard/ModeratorCard'
+import { moderatorData } from '@view/mockData'
+import { ModeratorCard } from '../ModeratorCard'
 
 import styles from './ModeratorsList.module.scss'
 
 interface ModeratorsListProps {}
 
-const ModeratorsList: FC<ModeratorsListProps> = () => {
-    console.log(moderatorData)
-
+export const ModeratorsList: FC<ModeratorsListProps> = () => {
     return (
         <div className={styles.main_content}>
             <h2>Модераторы</h2>
@@ -24,5 +22,3 @@ const ModeratorsList: FC<ModeratorsListProps> = () => {
         </div>
     )
 }
-
-export default ModeratorsList

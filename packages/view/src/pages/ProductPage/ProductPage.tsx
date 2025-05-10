@@ -1,17 +1,17 @@
 import { FC } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { products } from '../../../mockData'
-import Button from '../../components/Button/Button'
-import ProductCard from '../../components/ProductCard/ProductCard'
+import { products } from '@view/mockData'
+import { Button } from '@view/components/Button/Button'
+import { ProductCard } from '@view/components/ProductCard/ProductCard'
 
-import styles from './ProductPageLayout.module.scss'
+import styles from './ProductPage.module.scss'
 
-interface ProductPageLayoutProps {
+interface ProductPageProps {
     productId?: number
 }
 
-const ProductPageLayout: FC<ProductPageLayoutProps> = () => {
+export const ProductPage: FC<ProductPageProps> = () => {
     const { id } = useParams<{ id: string }>()
     const navigate = useNavigate()
     const product = products.find((product) => product.id === Number(id))
@@ -48,5 +48,3 @@ const ProductPageLayout: FC<ProductPageLayoutProps> = () => {
         </main>
     )
 }
-
-export default ProductPageLayout

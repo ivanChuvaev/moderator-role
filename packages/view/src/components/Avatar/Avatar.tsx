@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-unresolved
 import { Avatar as BaseAvatar } from '@base-ui-components/react/avatar'
-import * as React from 'react'
+import { CSSProperties, FC } from 'react'
 
 import styles from './Avatar.module.scss'
 
@@ -13,10 +13,10 @@ interface AvatarProps {
     className?: string
     imageClassName?: string
     fallbackClassName?: string
-    style?: React.CSSProperties
+    style?: CSSProperties
 }
 
-const Avatar: React.FC<AvatarProps> = ({
+export const Avatar: FC<AvatarProps> = ({
     src,
     alt = 'User avatar',
     width = 48,
@@ -64,5 +64,3 @@ const Avatar: React.FC<AvatarProps> = ({
         </BaseAvatar.Root>
     )
 }
-
-export default Avatar
