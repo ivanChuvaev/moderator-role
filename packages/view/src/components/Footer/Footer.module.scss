@@ -1,0 +1,37 @@
+.footer {
+    background-color: var(--secondary-color);
+    color: var(--background-color);
+    padding: 1rem;
+    margin-top: auto;
+}
+
+.footer_container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.footer_logo {
+    font-weight: bold;
+}
+
+.footer_nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.footer_nav li {
+    margin-left: 1.5rem;
+}
+
+.footer_nav a {
+    color: var(--background-color);
+    text-decoration: none;
+}
+
+.footer_copyright {
+    color: var(--secondary-text-color);
+}
