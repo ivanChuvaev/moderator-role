@@ -7,14 +7,15 @@ import styles from './Content.module.scss'
 
 interface ContentProps {
     showChat: boolean
-    onOpenChat: () => void
+    productId?: number
+    onOpenChat: (productId: number) => void
 }
 
-const Content: FC<ContentProps> = ({ showChat, onOpenChat }) => {
+const Content: FC<ContentProps> = ({ showChat, onOpenChat, productId }) => {
     return (
         <div className={styles.main_content}>
-            {showChat ? (
-                <Chat productId={1} />
+            {showChat && productId ? (
+                <Chat productId={productId} />
             ) : (
                 <ProductsList onOpenChat={onOpenChat} />
             )}

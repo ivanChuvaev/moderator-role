@@ -8,7 +8,7 @@ import ProductCard from '../../components/ProductCard/ProductCard'
 import styles from './ProductPageLayout.module.scss'
 
 interface ProductPageLayoutProps {
-    width?: string
+    productId?: number
 }
 
 const ProductPageLayout: FC<ProductPageLayoutProps> = () => {
@@ -16,10 +16,9 @@ const ProductPageLayout: FC<ProductPageLayoutProps> = () => {
     const navigate = useNavigate()
     const product = products.find((product) => product.id === Number(id))
 
-    const handleOpenChat = () => {
-        navigate('/chat')
+    const handleClick = () => {
+        navigate(`/chat/${product?.id}`)
     }
-
     if (!product) {
         return <h3>Товар не найден</h3>
     }
@@ -27,7 +26,7 @@ const ProductPageLayout: FC<ProductPageLayoutProps> = () => {
     return (
         <main className={styles.product_main}>
             <div className={styles.product_page}>
-                <ProductCard product={product} onOpenChat={handleOpenChat} />
+                <ProductCard product={product} onOpenChat={handleClick} />
                 <div className={styles.product_description}>
                     <h3>Описание товара</h3>
                     <div>Описание товара</div>

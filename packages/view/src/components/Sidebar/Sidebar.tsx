@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
 import ChatsList from '../ChatsList/ChatsList'
-import Filter from '../Filter/Filter'
+import ProductFilter from '../Filter/ProductFilter'
 
 import styles from './Sidebar.module.scss'
 
@@ -13,7 +13,7 @@ interface SidebarProps {
 const Sidebar: FC<SidebarProps> = ({ width = '300px', showChats }) => {
     return (
         <div className={styles.sidebar} style={{ width }}>
-            {showChats ? <ChatsList /> : <Filter />}
+            {showChats ? <ChatsList /> : <ProductFilter />}
         </div>
     )
 }

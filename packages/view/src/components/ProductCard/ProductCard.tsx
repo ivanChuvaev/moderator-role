@@ -1,14 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import { Product } from '../../types/Product'
+import { Product } from '../../types'
 import Button from '../Button/Button'
 
 import styles from './ProductCard.module.scss'
 
 interface ProductCardProps {
     product: Product
-    onOpenChat: () => void
+    onOpenChat: (productId: number) => void
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenChat }) => {
@@ -36,7 +36,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenChat }) => {
                 </div>
                 <div className={styles.seller}> {product.seller}</div>
                 <div className={styles.product_actions}>
-                    <Button label="Чат" onClick={onOpenChat} />
+                    <Button
+                        label="Чат"
+                        onClick={() => onOpenChat(product.id)}
+                    />
                     <Button label="Отложить" variant="secondary" />
                 </div>
             </div>

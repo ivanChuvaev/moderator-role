@@ -9,7 +9,7 @@ export const Header: React.FC<HeaderProps> = () => {
     return (
         <header className={styles.header}>
             <div className={styles.header_container}>
-                <Link to="/">
+                <Link to="/moderators">
                     <div className={styles.header_logo}>Модератор</div>
                 </Link>
                 <nav className={styles.header_nav}>
@@ -18,8 +18,10 @@ export const Header: React.FC<HeaderProps> = () => {
                         <Link to="/chat">
                             <li>Чат</li>
                         </Link>
+                        <Link to="/">
+                            <li>Товары</li>
+                        </Link>
 
-                        <li>Товары</li>
                         <li>ЛК</li>
                     </ul>
                 </nav>

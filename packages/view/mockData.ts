@@ -116,7 +116,8 @@ export const personData: Person[] = [
     {
         id: 1,
         type: 'seller',
-        avatar_src: 'seller1.jpg',
+        avatar_src:
+            'https://shapka-youtube.ru/wp-content/uploads/2022/11/parnaya-avatarka-dlya-lp-kotik.jpg',
         first_name: 'John',
         last_name: 'Doe',
         middle_name: 'A.',
@@ -125,7 +126,8 @@ export const personData: Person[] = [
     {
         id: 2,
         type: 'seller',
-        avatar_src: 'seller2.jpg',
+        avatar_src:
+            'https://shapka-youtube.ru/wp-content/uploads/2022/11/parnaya-avatarka-dlya-lp-kotik.jpg',
         first_name: 'Jane',
         last_name: 'Smith',
         middle_name: 'B.',
@@ -134,7 +136,8 @@ export const personData: Person[] = [
     {
         id: 3,
         type: 'moderator',
-        avatar_src: 'moderator1.jpg',
+        avatar_src:
+            'https://shapka-youtube.ru/wp-content/uploads/2022/11/parnaya-avatarka-dlya-lp-kotik.jpg',
         first_name: 'Michael',
         last_name: 'Johnson',
         middle_name: 'C.',
@@ -143,7 +146,8 @@ export const personData: Person[] = [
     {
         id: 4,
         type: 'admin',
-        avatar_src: 'admin1.jpg',
+        avatar_src:
+            'https://shapka-youtube.ru/wp-content/uploads/2022/11/parnaya-avatarka-dlya-lp-kotik.jpg',
         first_name: 'Emily',
         last_name: 'Williams',
         middle_name: 'D.',

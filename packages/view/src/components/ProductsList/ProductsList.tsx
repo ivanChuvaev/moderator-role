@@ -5,11 +5,11 @@ import ProductCard from '../ProductCard/ProductCard'
 
 import styles from './ProductsList.module.scss'
 
-interface ContentProps {
-    onOpenChat: () => void
+interface ProductsListProps {
+    onOpenChat: (productId: number) => void
 }
 
-const ProductsList: FC<ContentProps> = ({ onOpenChat }) => {
+const ProductsList: FC<ProductsListProps> = ({ onOpenChat }) => {
     return (
         <div className={styles.main_content}>
             <h2>Карточки товаров</h2>
@@ -18,7 +18,7 @@ const ProductsList: FC<ContentProps> = ({ onOpenChat }) => {
                     <ProductCard
                         key={product.id}
                         product={product}
-                        onOpenChat={onOpenChat}
+                        onOpenChat={() => onOpenChat(product.id)}
                     />
                 ))}
             </div>
