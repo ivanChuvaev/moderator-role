@@ -8,14 +8,24 @@ export class ModeratorTable {
     }
 
     createModerator(moderator: Moderator) {
-        this.moderators.set(moderator.person_id, moderator)
+        this.moderators.set(moderator.personId, moderator)
     }
 
-    getModerator(person_id: string) {
-        return this.moderators.get(person_id)
+    getModerator(personId: string) {
+        return this.moderators.get(personId)
     }
 
-    removeModerator(person_id: string) {
-        this.moderators.delete(person_id)
+    removeModerator(personId: string) {
+        this.moderators.delete(personId)
+    }
+
+    serialize() {
+        return Array.from(this.moderators.values())
+    }
+
+    parse(moderators: Moderator[]) {
+        this.moderators = new Map(
+            moderators.map((moderator) => [moderator.personId, moderator])
+        )
     }
 }

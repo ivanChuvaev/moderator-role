@@ -1,7 +1,7 @@
 export type Moderator = {
-    person_id: string
+    personId: string
     salary: number
     birthdate: number
-    employment_date: number
-    correct_factor: number
+    employmentDate: number
+    correctFactor: number
 }

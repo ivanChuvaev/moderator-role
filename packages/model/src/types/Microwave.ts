@@ -1,9 +1,10 @@
 export type Microwave = {
-    product_id: string
+    productId: string
     volume: number
     mass: number
     power: number
-    max_temperature: number
+    microwaveFrequency: number
+    maxTemperature: number
     width: number
     height: number
     depth: number

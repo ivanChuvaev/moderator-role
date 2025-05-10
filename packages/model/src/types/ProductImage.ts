@@ -1,5 +1,5 @@
 export type ProductImage = {
     id: string
-    product_id: string
+    productId: string
     src: string
 }

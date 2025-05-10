@@ -31,4 +31,14 @@ export class ProductImageTable {
             }
         }
     }
+
+    serialize() {
+        return Array.from(this.productImages.values())
+    }
+
+    parse(productImages: ProductImage[][]) {
+        this.productImages = new Map(
+            productImages.map((images) => [images[0].productId, images])
+        )
+    }
 }

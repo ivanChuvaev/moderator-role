@@ -12,12 +12,12 @@ export class ProductTable {
     }
 
     createProduct(
-        product: Prettify<Omit<Product, 'id' | 'moderator_id' | 'status'>>
+        product: Prettify<Omit<Product, 'id' | 'moderatorId' | 'status'>>
     ): Product {
         const newProduct = {
             ...product,
             status: ProductStatus.PENDING,
-            moderator_id: null,
+            moderatorId: null,
             id: uuidv4(),
         }
         this.products.set(newProduct.id, newProduct)
@@ -36,9 +36,17 @@ export class ProductTable {
         this.products.delete(productId)
     }
 
-    getRejectedProducts(): Product[] {
-        return Array.from(this.products.values()).filter(
-            (product) => product.status === ProductStatus.REJECTED
+    updateProduct(product: Product): void {
+        this.products.set(product.id, product)
+    }
+
+    serialize() {
+        return Array.from(this.products.values())
+    }
+
+    parse(products: Product[]) {
+        this.products = new Map(
+            products.map((product) => [product.id, product])
         )
     }
 }

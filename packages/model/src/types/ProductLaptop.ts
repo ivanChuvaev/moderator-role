@@ -7,6 +7,6 @@ import { Prettify } from './utils'
 export type ProductLaptop = Prettify<
     Omit<Product, 'category'> & { category: ProductCategory.LAPTOP } & Omit<
             Laptop,
-            'product_id'
+            'productId'
         >
 >

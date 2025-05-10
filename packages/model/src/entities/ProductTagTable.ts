@@ -12,26 +12,34 @@ export class ProductTagTable {
     addTagToProduct(productId: string, tagId: string) {
         this.productTags.push({
             id: uuidv4(),
-            product_id: productId,
-            tag_id: tagId,
+            productId: productId,
+            tagId: tagId,
         })
     }
 
     removeTagFromProduct(productId: string, tagId: string) {
         this.productTags = this.productTags.filter(
-            (tag) => tag.product_id !== productId && tag.tag_id !== tagId
+            (tag) => tag.productId !== productId && tag.tagId !== tagId
         )
     }
 
     getTagIdsOfProduct(productId: string): string[] {
         return this.productTags
-            .filter((tag) => tag.product_id === productId)
-            .map((tag) => tag.tag_id)
+            .filter((tag) => tag.productId === productId)
+            .map((tag) => tag.tagId)
     }
 
     getProductIdsOfTag(tagId: string): string[] {
         return this.productTags
-            .filter((tag) => tag.tag_id === tagId)
-            .map((tag) => tag.product_id)
+            .filter((tag) => tag.tagId === tagId)
+            .map((tag) => tag.productId)
+    }
+
+    serialize() {
+        return this.productTags
+    }
+
+    parse(productTags: ProductTag[]) {
+        this.productTags = productTags
     }
 }

@@ -30,4 +30,12 @@ export class TagTable {
     removeTag(id: string): void {
         this.tags.delete(id)
     }
+
+    serialize() {
+        return Array.from(this.tags.values())
+    }
+
+    parse(tags: Tag[]) {
+        this.tags = new Map(tags.map((tag) => [tag.id, tag]))
+    }
 }

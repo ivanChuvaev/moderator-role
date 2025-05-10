@@ -7,11 +7,11 @@ export class ScenarioTable {
         this.scenarios = []
     }
 
-    createScenario(product_id: string) {
+    createScenario(productId: string) {
         const scenario: Scenario = {
-            product_id,
-            last_scenario_entry_id: null,
-            last_timestamp: null,
+            productId: productId,
+            lastScenarioEntryId: null,
+            lastTimestamp: null,
             ignore: null,
         }
         this.scenarios.push(scenario)
@@ -21,8 +21,8 @@ export class ScenarioTable {
         return this.scenarios.filter(
             (scenario) =>
                 scenario.ignore === null &&
-                scenario.last_scenario_entry_id === null &&
-                scenario.last_timestamp == null
+                scenario.lastScenarioEntryId === null &&
+                scenario.lastTimestamp == null
         )
     }
 
@@ -30,18 +30,26 @@ export class ScenarioTable {
         return this.scenarios
     }
 
-    getScenario(product_id: string) {
+    getScenario(productId: string) {
         return this.scenarios.find(
-            (scenario) => scenario.product_id === product_id
+            (scenario) => scenario.productId === productId
         )
     }
 
     updateScenario(scenario: Scenario) {
         const index = this.scenarios.findIndex(
-            (s) => s.product_id === scenario.product_id
+            (s) => s.productId === scenario.productId
         )
         if (index !== -1) {
             this.scenarios[index] = scenario
         }
+    }
+
+    serialize() {
+        return this.scenarios
+    }
+
+    parse(scenarios: Scenario[]) {
+        this.scenarios = scenarios
     }
 }

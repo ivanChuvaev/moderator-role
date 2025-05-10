@@ -1,5 +1,5 @@
 export type Refrigerator = {
-    product_id: string
+    productId: string
     width: number
     height: number
     depth: number

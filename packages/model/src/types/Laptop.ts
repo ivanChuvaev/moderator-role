@@ -1,5 +1,5 @@
 export type Laptop = {
-    product_id: string
+    productId: string
     diagonal: number
     storage: number
     ram: number

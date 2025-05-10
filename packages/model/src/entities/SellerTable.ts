@@ -8,14 +8,24 @@ export class SellerTable {
     }
 
     createSeller(seller: Seller) {
-        this.sellers.set(seller.person_id, seller)
+        this.sellers.set(seller.personId, seller)
     }
 
-    getSeller(person_id: string) {
-        return this.sellers.get(person_id)
+    getSeller(personId: string) {
+        return this.sellers.get(personId)
     }
 
-    removeSeller(person_id: string) {
-        this.sellers.delete(person_id)
+    removeSeller(personId: string) {
+        this.sellers.delete(personId)
+    }
+
+    serialize() {
+        return Array.from(this.sellers.values())
+    }
+
+    parse(sellers: Seller[]) {
+        this.sellers = new Map(
+            sellers.map((seller) => [seller.personId, seller])
+        )
     }
 }

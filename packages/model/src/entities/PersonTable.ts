@@ -30,4 +30,12 @@ export class PersonTable {
     removePerson(id: string): void {
         this.persons.delete(id)
     }
+
+    serialize() {
+        return Array.from(this.persons.values())
+    }
+
+    parse(persons: Person[]) {
+        this.persons = new Map(persons.map((person) => [person.id, person]))
+    }
 }

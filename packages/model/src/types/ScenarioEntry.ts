@@ -3,7 +3,7 @@ import { ScenarioEntryType } from '../enums/ScenarioEntryType'
 export type ScenarioEntry = {
     id: string
     type: ScenarioEntryType
-    product_id: string
-    parent_id: string | null
+    productId: string
+    parentId: string | null
     text: string
 }

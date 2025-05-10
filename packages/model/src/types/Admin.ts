@@ -1,5 +1,5 @@
 export type Admin = {
-    person_id: string
+    personId: string
     login: string
     password: string
 }

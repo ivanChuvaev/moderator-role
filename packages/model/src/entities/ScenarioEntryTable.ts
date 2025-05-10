@@ -10,33 +10,44 @@ export class ScenarioEntryTable {
     }
 
     createScenarioEntry(
-        scenario_entry: Omit<ScenarioEntry, 'id'>
+        scenarioEntry: Omit<ScenarioEntry, 'id'>
     ): ScenarioEntry {
         const newScenarioEntry: ScenarioEntry = {
-            ...scenario_entry,
+            ...scenarioEntry,
             id: uuidv4(),
         }
         this.scenarioEntries.set(newScenarioEntry.id, newScenarioEntry)
         return newScenarioEntry
     }
 
-    getScenarioEntry(scenario_entry_id: string): ScenarioEntry | undefined {
-        return this.scenarioEntries.get(scenario_entry_id)
+    getScenarioEntry(scenarioEntryId: string): ScenarioEntry | undefined {
+        return this.scenarioEntries.get(scenarioEntryId)
     }
 
-    getProductStartScenarioEntry(
-        product_id: string
-    ): ScenarioEntry | undefined {
+    getProductStartScenarioEntry(productId: string): ScenarioEntry | undefined {
         return Array.from(this.scenarioEntries.values()).find(
             (scenarioEntry) =>
-                scenarioEntry.product_id === product_id &&
-                scenarioEntry.parent_id === null
+                scenarioEntry.productId === productId &&
+                scenarioEntry.parentId === null
         )
     }
 
-    getScenarioEntryChildren(scenario_entry_id: string): ScenarioEntry[] {
+    getScenarioEntryChildren(scenarioEntryId: string): ScenarioEntry[] {
         return Array.from(this.scenarioEntries.values()).filter(
-            (scenarioEntry) => scenarioEntry.parent_id === scenario_entry_id
+            (scenarioEntry) => scenarioEntry.parentId === scenarioEntryId
+        )
+    }
+
+    serialize() {
+        return Array.from(this.scenarioEntries.values())
+    }
+
+    parse(scenarioEntries: ScenarioEntry[]) {
+        this.scenarioEntries = new Map(
+            scenarioEntries.map((scenarioEntry) => [
+                scenarioEntry.id,
+                scenarioEntry,
+            ])
         )
     }
 }

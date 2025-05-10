@@ -7,6 +7,6 @@ import { Prettify } from './utils'
 export type PersonSeller = Prettify<
     Omit<Person, 'type'> & { type: PersonType.SELLER } & Omit<
             Seller,
-            'person_id'
+            'personId'
         >
 >

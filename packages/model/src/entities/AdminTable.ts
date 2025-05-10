@@ -8,14 +8,22 @@ export class AdminTable {
     }
 
     createAdmin(admin: Admin) {
-        this.admins.set(admin.person_id, admin)
+        this.admins.set(admin.personId, admin)
     }
 
-    getAdmin(person_id: string) {
-        return this.admins.get(person_id)
+    getAdmin(personId: string) {
+        return this.admins.get(personId)
     }
 
-    removeAdmin(person_id: string) {
-        this.admins.delete(person_id)
+    removeAdmin(personId: string) {
+        this.admins.delete(personId)
+    }
+
+    serialize() {
+        return Array.from(this.admins.values())
+    }
+
+    parse(admins: Admin[]) {
+        this.admins = new Map(admins.map((admin) => [admin.personId, admin]))
     }
 }

@@ -4,9 +4,9 @@ import { ProductStatus } from '../enums/ProductStatus'
 export type Product = {
     category: ProductCategory
     id: string
-    moderator_id: string | null
+    moderatorId: string | null
     name: string
     price: number
-    seller_id: string
+    sellerId: string
     status: ProductStatus
 }

@@ -10,12 +10,19 @@ module.exports = {
         'plugin:import/typescript',
         'plugin:prettier/recommended',
     ],
-    parser: '@typescript-eslint/parser',
+    // parser: '@typescript-eslint/parser',
     parserOptions: {
         ecmaVersion: 12,
         sourceType: 'module',
     },
-    plugins: ['@typescript-eslint', 'import', 'prettier'],
+    // plugins: ['@typescript-eslint', 'import', 'prettier'],
+    // settings: {
+    //     'import/resolver': {
+    //         typescript: {
+    //             project: './tsconfig.json',
+    //         },
+    //     },
+    // },
     rules: {
         'import/order': [
             'error',
