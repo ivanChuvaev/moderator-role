@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Product } from '../../types'
 import { Button } from '../Button'
 
 import styles from './ProductCard.module.scss'
+import { GameOverModal } from '../GameOverModal'
 
 interface ProductCardProps {
     product: Product
@@ -15,6 +16,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     product,
     onOpenChat,
 }) => {
+    const [openModal, setOpenModal] = useState<boolean>(false)
+
     return (
         <div className={styles.product_card_wrapper}>
             <Link to={`/product/${product.id}`}>
@@ -41,10 +44,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 <div className={styles.product_actions}>
                     <Button
                         label="Чат"
-                        onClick={() => onOpenChat(product.id)}
+                        // onClick={() => onOpenChat(product.id)}
+                        onClick={() => setOpenModal(true)}
                     />
                     <Button label="Отложить" variant="secondary" />
                 </div>
+                {openModal && (
+                    <GameOverModal
+                        isOpen={openModal}
+                        onClose={() => setOpenModal(false)}
+                        isWinner
+                    />
+                )}
             </div>
         </div>
     )

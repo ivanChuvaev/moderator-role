@@ -6,12 +6,17 @@ import { ProductsPage } from '@view/pages/ProductsPage'
 import { GlobalLayout } from '@view/layouts/GlobalLayout/GlobalLayout'
 import { ModeratorsPage } from '@view/pages/ModeratorsPage'
 import { ChatPage, ChatPageChat } from '@view/pages/ChatPage'
+import { LoginPage } from '@view/pages/LoginPage'
 
 const router = createBrowserRouter([
     {
         path: '/',
         element: <GlobalLayout />,
         children: [
+            {
+                path: '/login',
+                element: <LoginPage />,
+            },
             {
                 path: '/',
                 loader: () => replace('/products'),

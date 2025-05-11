@@ -1,0 +1,105 @@
+.backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(2px);
+    z-index: 1000;
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--primary-color);
+    border-radius: 12px;
+    padding: 24px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 1001;
+    text-align: center;
+}
+
+.title {
+    margin: 0 0 16px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+}
+
+.winner_Content {
+    color: #2e7d32;
+
+    .message {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+
+    .score {
+        font-size: 20px;
+        margin: 16px 0;
+
+        span {
+            font-weight: 700;
+            color: #d32f2f;
+        }
+    }
+
+    .fireworks {
+        font-size: 48px;
+        margin: 16px 0;
+        animation: bounce 0.5s infinite alternate;
+    }
+}
+
+.loser_content {
+    color: #c62828;
+
+    .message {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+
+    .encouragement {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 16px;
+    }
+
+    .sadFace {
+        font-size: 48px;
+        margin: 16px 0;
+    }
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.restart_button {
+    padding: 10px 20px;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: #1565c0;
+    }
+}
+
+@keyframes bounce {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-10px);
+    }
+}

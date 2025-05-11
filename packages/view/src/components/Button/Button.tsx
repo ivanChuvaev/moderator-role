@@ -9,6 +9,8 @@ interface ButtonProps {
     className?: string
     variant?: ButtonVariant
     onClick?: () => void
+    type?: string
+    disabled?: boolean
 }
 
 export const Button: React.FC<ButtonProps> = ({
