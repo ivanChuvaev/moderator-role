@@ -1,4 +1,4 @@
-import { Admin, ChatMessage, Moderator, Person, Seller } from './src/types'
+import { Admin, ChatMessage, Moderator, Person, Seller } from './types'
 
 export const products = [
     {

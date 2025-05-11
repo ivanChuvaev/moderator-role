@@ -6,6 +6,7 @@ import { Button } from '@view/components/Button/Button'
 import { ProductCard } from '@view/components/ProductCard/ProductCard'
 
 import styles from './ProductPage.module.scss'
+import { PageLayout } from '@view/layouts/PageLayout'
 
 interface ProductPageProps {
     productId?: number
@@ -24,27 +25,29 @@ export const ProductPage: FC<ProductPageProps> = () => {
     }
 
     return (
-        <main className={styles.product_main}>
-            <div className={styles.product_page}>
-                <ProductCard product={product} onOpenChat={handleClick} />
-                <div className={styles.product_description}>
-                    <h3>Описание товара</h3>
-                    <div>Описание товара</div>
+        <PageLayout>
+            <main className={styles.product_main}>
+                <div className={styles.product_page}>
+                    <ProductCard product={product} onOpenChat={handleClick} />
+                    <div className={styles.product_description}>
+                        <h3>Описание товара</h3>
+                        <div>Описание товара</div>
+                    </div>
                 </div>
-            </div>
 
-            <div className={styles.product_description}>
-                <h3>Характеристики товара</h3>
-                <span>{product?.diagonal}</span>
-                <span>{product?.depth}</span>
-                <span>{product?.mass}</span>
-                <span>{product?.volume}</span>
-            </div>
+                <div className={styles.product_description}>
+                    <h3>Характеристики товара</h3>
+                    <span>{product?.diagonal}</span>
+                    <span>{product?.depth}</span>
+                    <span>{product?.mass}</span>
+                    <span>{product?.volume}</span>
+                </div>
 
-            <div className={styles.product_actions}>
-                <Button label="Отклонить" variant="danger" />
-                <Button label="Принять" />
-            </div>
-        </main>
+                <div className={styles.product_actions}>
+                    <Button label="Отклонить" variant="danger" />
+                    <Button label="Принять" />
+                </div>
+            </main>
+        </PageLayout>
     )
 }
