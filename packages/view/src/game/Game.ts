@@ -44,6 +44,11 @@ export class Game {
         })
     }
 
+    restart() {
+        this.initialize()
+        this.start()
+    }
+
     start() {
         this.interval = window.setInterval(() => this.tick(), 3000)
     }

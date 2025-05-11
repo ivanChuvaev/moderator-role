@@ -5,19 +5,12 @@ import { Product } from '../../types'
 import { Button } from '../Button'
 
 import styles from './ProductCard.module.scss'
-import { GameOverModal } from '../GameOverModal'
 
 interface ProductCardProps {
     product: Product
-    onOpenChat: (productId: number) => void
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({
-    product,
-    onOpenChat,
-}) => {
-    const [openModal, setOpenModal] = useState<boolean>(false)
-
+export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     return (
         <div className={styles.product_card_wrapper}>
             <Link to={`/product/${product.id}`}>
@@ -42,20 +35,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 </div>
                 <div className={styles.seller}> {product.seller}</div>
                 <div className={styles.product_actions}>
-                    <Button
-                        label="Чат"
-                        // onClick={() => onOpenChat(product.id)}
-                        onClick={() => setOpenModal(true)}
-                    />
+                    <Button label="Чат" />
                     <Button label="Отложить" variant="secondary" />
                 </div>
-                {openModal && (
-                    <GameOverModal
-                        isOpen={openModal}
-                        onClose={() => setOpenModal(false)}
-                        isWinner
-                    />
-                )}
             </div>
         </div>
     )

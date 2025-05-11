@@ -1,24 +1,20 @@
-import * as React from 'react'
 import { Field } from '@base-ui-components/react/field'
 import { Form } from '@base-ui-components/react/form'
 import { validateLoginForm } from '../../utils/loginValidation'
 import styles from './LoginForm.module.scss'
 import { Button } from '../Button'
 import { useNavigate } from 'react-router-dom'
+import { FC, useState } from 'react'
 
-interface LoginFormProps {
-    onLoginSuccess?: () => void
-}
-
-export const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
+export const LoginForm: FC = () => {
     const navigate = useNavigate()
 
-    const [errors, setErrors] = React.useState<{
+    const [errors, setErrors] = useState<{
         login?: string
         password?: string
     }>({})
 
-    const [loading, setLoading] = React.useState(false)
+    const [loading, setLoading] = useState(false)
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault()

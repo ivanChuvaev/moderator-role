@@ -1,25 +1,23 @@
-import * as React from 'react'
 import { Dialog } from '@base-ui-components/react/dialog'
-import styles from './GameOverModal.module.scss'
+import styles from './GameResultModal.module.scss'
 import { Button } from '../Button'
+import { useGameData } from '@view/hooks/useGameData'
+import { FC } from 'react'
+import { game } from '@view/game'
 
-interface GameOverModalProps {
-    isOpen: boolean
-    onClose: () => void
-    isWinner: boolean
-    score?: number
-    onRestart?: () => void
-}
-
-export const GameOverModal: React.FC<GameOverModalProps> = ({
-    isOpen,
-    onClose,
-    isWinner,
-    score = 100,
-    onRestart,
+export const GameResultModal: FC = ({
 }) => {
+    const isEnd = useGameData((engine) => engine.getIsEnd())
+
+    const isWinner = true
+    const score = 100
+
+    const onRestart = () => {
+        game.restart()
+    }
+
     return (
-        <Dialog.Root open={isOpen} onOpenChange={onClose}>
+        <Dialog.Root open={isEnd}>
             <Dialog.Portal>
                 <Dialog.Backdrop className={styles.backdrop} />
                 <Dialog.Popup className={styles.popup}>
@@ -56,13 +54,11 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
                     )}
 
                     <div className={styles.actions}>
-                        {onRestart && (
-                            <Button
-                                className={styles.restart_button}
-                                onClick={onRestart}
-                                label="Играть снова"
-                            />
-                        )}
+                        <Button
+                            className={styles.restart_button}
+                            onClick={onRestart}
+                            label="Играть снова"
+                        />
                         <Dialog.Close>
                             <Button label="Закрыть" />
                         </Dialog.Close>
