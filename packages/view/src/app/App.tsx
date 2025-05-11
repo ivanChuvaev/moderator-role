@@ -29,7 +29,7 @@ const router = createBrowserRouter([
                 element: <ModeratorsPage />,
             },
             {
-                path: '/chat',
+                path: '/chats',
                 element: <ChatPage />,
                 children: [
                     {

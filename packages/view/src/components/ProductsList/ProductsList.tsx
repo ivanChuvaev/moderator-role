@@ -13,7 +13,6 @@ export const ProductsList: FC<ProductsListProps> = (props) => {
     const { onOpenChat } = props
     return (
         <div className={styles.main_content}>
-            <h2>Карточки товаров</h2>
             <div className={styles.products_container}>
                 {products.map((product) => (
                     <ProductCard

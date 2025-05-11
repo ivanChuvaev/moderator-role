@@ -18,7 +18,7 @@ export const ProductPage: FC<ProductPageProps> = () => {
     const product = products.find((product) => product.id === Number(id))
 
     const handleClick = () => {
-        navigate(`/chat/${product?.id}`)
+        navigate(`/chats/${product?.id}`)
     }
     if (!product) {
         return <h3>Товар не найден</h3>

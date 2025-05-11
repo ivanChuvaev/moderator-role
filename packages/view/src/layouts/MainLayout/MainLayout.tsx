@@ -15,7 +15,7 @@ const MainLayout: FC<MainLayoutProps> = ({ isChatMode = false }) => {
     const navigate = useNavigate()
 
     const handleOpenChat = (id: number) => {
-        navigate(`/chat/${id}`)
+        navigate(`/chats/${id}`)
     }
 
     return (

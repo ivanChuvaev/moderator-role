@@ -31,7 +31,7 @@ export const ChatCard: React.FC<ChatCardProps> = ({ productId }) => {
     )
 
     const handleClick = () => {
-        navigate(`/chat/${productId}`)
+        navigate(`/chats/${productId}`)
     }
 
     if (!product || !sellerPerson) {

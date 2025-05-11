@@ -10,7 +10,6 @@ interface ModeratorsListProps {}
 export const ModeratorsList: FC<ModeratorsListProps> = () => {
     return (
         <div className={styles.main_content}>
-            <h2>Модераторы</h2>
             <div className={styles.products_container}>
                 {moderatorData.map((moderator) => (
                     <ModeratorCard
