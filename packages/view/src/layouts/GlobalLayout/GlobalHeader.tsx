@@ -6,7 +6,11 @@ import { Container } from '@view/ui/Container'
 
 export const GlobalHeader: FC = () => {
     return (
-        <Container className={styles.header}>
+        <Container
+            className={styles['header-container']}
+            classNameContent={styles.header}
+        >
+            <div>Moderator role game</div>
             <nav className={styles.header_nav}>
                 <ul>
                     <Link to="/moderators">

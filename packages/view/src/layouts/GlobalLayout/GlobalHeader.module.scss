@@ -1,7 +1,12 @@
-.header {
+.header-container {
     background-color: var(--secondary-color);
-    color: var(--background-color);
     padding: 1rem;
+}
+
+.header {
+    color: var(--background-color);
+    display: flex;
+    align-items: center;
 }
 
 .header_logo {
