@@ -1,52 +1,88 @@
-import { FC } from 'react'
-import { useNavigate } from 'react-router-dom'
-
-import {
-    products,
-    sellerData,
-    moderatorData,
-    personData,
-    chatMessageData,
-} from '@view/mockData'
+import { FC, useEffect, useMemo } from 'react'
 
 import { Button } from '../Button'
 
 import styles from './Chat.module.scss'
+import { useGameData } from '@view/hooks/useGameData'
+import cn from 'classnames'
+import { ScenarioEntryType, translateProductStatus } from '@model'
+import { useAuthorizationStorage } from '@view/storageModule'
+import { Paper } from '@view/ui/Paper'
 
-interface ChatProps {
-    productId?: number
+type ChatProps = {
+    productId: string
 }
 
 export const Chat: FC<ChatProps> = ({ productId }) => {
-    const navigate = useNavigate()
+    const product = useGameData(
+        (engine) => engine.getFullProduct(productId),
+        [productId]
+    )
+    const [authorizationStorage] = useAuthorizationStorage()
 
-    const currentProduct = products.find((p) => p.id === productId)
+    const admin = useGameData(
+        (engine) =>
+            authorizationStorage
+                ? engine.getFullAdminByLogin(authorizationStorage.login)
+                : undefined,
+        [authorizationStorage]
+    )
 
-    const seller = sellerData[0]
-    const sellerPerson = personData.find((p) => p.id === seller.person_id)
+    const answerScenarioEntries = useGameData(
+        (engine) => engine.getProductCurrentScenarioEntryChildren(productId),
+        [productId]
+    )
 
-    const moderator = moderatorData[0]
-    const moderatorPerson = personData.find((p) => p.id === moderator.person_id)
+    const continueDisputeByModerator = useGameData(
+        (engine) => {
+            return engine.continueDisputeByModerator
+        },
+        [productId]
+    )
 
-    const messages = chatMessageData
-        .filter((msg) => msg.product_id === productId || msg.product_id === 101)
-        .map((msg) => {
-            const sender = personData.find((p) => p.id === msg.person_id)
-            return {
-                ...msg,
-                senderName: sender
-                    ? `${sender.first_name} ${sender.last_name}`
-                    : 'Неизвестный',
-                isReply: msg.person_id !== seller.person_id,
-                date: new Date(msg.date * 1000).toLocaleString('ru-RU'),
-            }
-        })
+    const defendScenarioEntry = useMemo(
+        () =>
+            answerScenarioEntries.find(
+                (entry) => entry.type === ScenarioEntryType.MODERATOR_DEFEND
+            ),
+        [answerScenarioEntries]
+    )
 
-    const handleBack = () => {
-        navigate(-1)
+    const admitScenarioEntry = useMemo(
+        () =>
+            answerScenarioEntries.find(
+                (entry) => entry.type === ScenarioEntryType.MODERATOR_ADMIT
+            ),
+        [answerScenarioEntries]
+    )
+
+    const canAdmit = Boolean(product && admin && admitScenarioEntry)
+    const canDefend = Boolean(product && admin && defendScenarioEntry)
+
+    const defend = () => {
+        if (!product || !admin || !defendScenarioEntry) return undefined
+        return continueDisputeByModerator(
+            productId,
+            admin.id,
+            defendScenarioEntry.id
+        )
     }
 
-    if (!currentProduct) {
+    const admit = () => {
+        if (!product || !admin || !admitScenarioEntry) return undefined
+        return continueDisputeByModerator(
+            productId,
+            admin.id,
+            admitScenarioEntry.id
+        )
+    }
+
+    const messages = useGameData((engine) =>
+        engine.getProductMessages(productId),
+        [productId]
+    )
+
+    if (!product) {
         return (
             <div className={styles.notFound}>
                 Товар с ID {productId} не найден
@@ -55,76 +91,80 @@ export const Chat: FC<ChatProps> = ({ productId }) => {
     }
 
     return (
-        <main className={styles.chat_container}>
-            <div className={styles.chat_header}>
-                <button className={styles.back_button} onClick={handleBack}>
-                    ← Назад
-                </button>
-                <div className={styles.user_info}>
-                    <div className={styles.seller_info}>
+        <div className={styles.chat}>
+            <Paper className={styles['user-info']}>
+                <div className={styles['user-info__seller']}>
+                    <span className={styles.name}>
+                        {product.seller.firstName} {product.seller.lastName}
+                    </span>
+                    <span className={styles.id}>ID: {product.seller.id}</span>
+                    <span className={styles.status}>
+                        {translateProductStatus(product.status)}
+                    </span>
+                </div>
+
+                {product.moderator && (
+                    <div className={styles['user-info__moderator']}>
                         <span className={styles.name}>
-                            {sellerPerson?.first_name} {sellerPerson?.last_name}
+                            Модератор: {product.moderator.firstName}
+                            {product.moderator.lastName}
                         </span>
                         <span className={styles.id}>
-                            ID: {seller.person_id}
-                        </span>
-                        <span className={styles.status}>
-                            {currentProduct.status}
+                            ID: {product.moderator.id}
                         </span>
                     </div>
-
-                    {moderatorPerson && (
-                        <div className={styles.moderator_info}>
-                            <span className={styles.name}>
-                                Модератор: {moderatorPerson.first_name}{' '}
-                                {moderatorPerson.last_name}
-                            </span>
-                            <span className={styles.id}>
-                                ID: {moderator.person_id}
-                            </span>
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            <div className={styles.product_info}>
-                <h3>{currentProduct.name}</h3>
-                <p>Категория: {currentProduct.category}</p>
-                <p>Цена: ${currentProduct.price}</p>
-            </div>
-
-            <div className={styles.messages_container}>
+                )}
+            </Paper>
+            <Paper className={styles.info}>
+                <h3>{product.name}</h3>
+                <p>Категория: {product.category}</p>
+                <p>Цена: ${product.price}</p>
+            </Paper>
+            <Paper className={styles.messages}>
                 {messages.length > 0 ? (
                     messages.map((message) => (
                         <div
                             key={message.id}
-                            className={`${styles.message} ${
-                                message.isReply ? styles.reply : ''
-                            }`}
+                            className={cn(styles.message, {
+                                [styles['message--seller']]:
+                                    message.person.id === product.seller.id,
+                            })}
                         >
-                            <div className={styles.message_meta}>
-                                <span className={styles.sender}>
-                                    {message.senderName}
+                            <div className={styles['message-meta']}>
+                                <span
+                                    className={styles['message-meta__sender']}
+                                >
+                                    {message.person.firstName}
+                                    &nbsp;
+                                    {message.person.lastName}
                                 </span>
-                                <span className={styles.date}>
-                                    {message.date}
+                                <span className={styles['message-meta__date']}>
+                                    {new Date(message.date).toLocaleString()}
                                 </span>
                             </div>
-                            <div className={styles.message_text}>
+                            <div className={styles['message-text']}>
                                 {message.text}
                             </div>
                         </div>
                     ))
                 ) : (
-                    <div className={styles.noMessages}>
+                    <div className={styles['no-messages']}>
                         Нет сообщений в этом чате
                     </div>
                 )}
-            </div>
-            <div className={styles.product_actions}>
-                <Button label="Отстаивать позицию" />
-                <Button label="Признать ошибку" variant="secondary" />
-            </div>
-        </main>
+            </Paper>
+            {(canDefend || canAdmit) && (
+                <Paper className={styles.actions}>
+                    {canDefend && (
+                        <Button onClick={defend}>Отстаивать позицию</Button>
+                    )}
+                    {canAdmit && (
+                        <Button variant="secondary" onClick={admit}>
+                            Признать ошибку
+                        </Button>
+                    )}
+                </Paper>
+            )}
+        </div>
     )
 }

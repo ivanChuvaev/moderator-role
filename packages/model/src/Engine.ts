@@ -5,15 +5,22 @@ import { LaptopTable } from './entities/LaptopTable'
 import { MicrowaveTable } from './entities/MicrowaveTable'
 import { ModeratorTable } from './entities/ModeratorTable'
 import { PersonTable } from './entities/PersonTable'
+import { ProductImageTable } from './entities/ProductImageTable'
 import { ProductTable } from './entities/ProductTable'
+import { ProductTagTable } from './entities/ProductTagTable'
 import { RefrigeratorTable } from './entities/RefrigeratorTable'
 import { ScenarioEntryTable } from './entities/ScenarioEntryTable'
 import { ScenarioTable } from './entities/ScenarioTable'
 import { SellerTable } from './entities/SellerTable'
+import { TagTable } from './entities/TagTable'
 import { PersonType } from './enums/PersonType'
 import { ProductCategory } from './enums/ProductCategory'
 import { ProductStatus } from './enums/ProductStatus'
 import { ScenarioEntryType } from './enums/ScenarioEntryType'
+import { Chat } from './types/Chat'
+import { FullChatMessage } from './types/FullMessage'
+import { FullPerson } from './types/FullPerson'
+import { FullProduct } from './types/FullProduct'
 import { PersonAdmin } from './types/PersonAdmin'
 import { PersonModerator } from './types/PersonModerator'
 import { PersonSeller } from './types/PersonSeller'
@@ -50,21 +57,10 @@ type CreatePersonArg = Prettify<
     | Omit<PersonSeller, 'id'>
 >
 
-type GetProductReturnValue =
-    | Prettify<ProductRefrigerator>
-    | Prettify<ProductLaptop>
-    | Prettify<ProductMicrowave>
-    | Prettify<ProductFanHeater>
-    | undefined
-
-type GetPersonReturnValue =
-    | Prettify<PersonAdmin>
-    | Prettify<PersonModerator>
-    | Prettify<PersonSeller>
-    | undefined
-
 export class Engine {
     private productTable!: ProductTable
+    private productImageTable!: ProductImageTable
+    private productTagTable!: ProductTagTable
     private laptopTable!: LaptopTable
     private refrigeratorTable!: RefrigeratorTable
     private microwaveTable!: MicrowaveTable
@@ -76,6 +72,7 @@ export class Engine {
     private scenarioTable!: ScenarioTable
     private scenarioEntryTable!: ScenarioEntryTable
     private chatMessageTable!: ChatMessageTable
+    private tagTable!: TagTable
     private time!: number
     private maxTime!: number
     private end!: boolean
@@ -84,6 +81,44 @@ export class Engine {
     constructor(maxTime: number = 300) {
         this.maxTime = maxTime
         this.reset()
+
+        this.subscribe = this.subscribe.bind(this)
+        this.unsubscribe = this.unsubscribe.bind(this)
+        this.tick = this.tick.bind(this)
+        this.createProduct = this.createProduct.bind(this)
+        this.createPerson = this.createPerson.bind(this)
+        this.approveProduct = this.approveProduct.bind(this)
+        this.rejectProduct = this.rejectProduct.bind(this)
+        this.continueDisputeByModerator =
+            this.continueDisputeByModerator.bind(this)
+        this.getTime = this.getTime.bind(this)
+        this.getMaxTime = this.getMaxTime.bind(this)
+        this.getIsEnd = this.getIsEnd.bind(this)
+        this.getChats = this.getChats.bind(this)
+        this.getFullProducts = this.getFullProducts.bind(this)
+        this.getFullProduct = this.getFullProduct.bind(this)
+        this.getFullPerson = this.getFullPerson.bind(this)
+        this.getProductSeller = this.getProductSeller.bind(this)
+        this.getProductModerator = this.getProductModerator.bind(this)
+        this.getProductMessages = this.getProductMessages.bind(this)
+        this.getProductTags = this.getProductTags.bind(this)
+        this.getFullChatMessage = this.getFullChatMessage.bind(this)
+        this.getProductCurrentScenarioEntryChildren =
+            this.getProductCurrentScenarioEntryChildren.bind(this)
+        this.getProductCurrentScenarioEntry =
+            this.getProductCurrentScenarioEntry.bind(this)
+        this.getWrongCount = this.getWrongCount.bind(this)
+        this.getFullAdminByLogin = this.getFullAdminByLogin.bind(this)
+        this.getCounters = this.getCounters.bind(this)
+        this.serialize = this.serialize.bind(this)
+        this.parse = this.parse.bind(this)
+        this.notifySubscribers = this.notifySubscribers.bind(this)
+        this.disputeTick = this.disputeTick.bind(this)
+        this.ignoreDispute = this.ignoreDispute.bind(this)
+        this.continueDisputeBySeller = this.continueDisputeBySeller.bind(this)
+        this.createChatMessage = this.createChatMessage.bind(this)
+        this.initializeScenarioEntryRecursive =
+            this.initializeScenarioEntryRecursive.bind(this)
     }
 
     reset() {
@@ -99,6 +134,9 @@ export class Engine {
         this.scenarioTable = new ScenarioTable()
         this.scenarioEntryTable = new ScenarioEntryTable()
         this.chatMessageTable = new ChatMessageTable()
+        this.productImageTable = new ProductImageTable()
+        this.productTagTable = new ProductTagTable()
+        this.tagTable = new TagTable()
         this.time = 0
         this.end = false
     }
@@ -128,6 +166,12 @@ export class Engine {
     }
 
     createProduct(product: CreateProductArg) {
+        const seller = this.getFullPerson(product.sellerId) as PersonSeller
+
+        if (!seller || seller.type !== PersonType.SELLER) {
+            throw new Error('Seller not found')
+        }
+
         const createdProduct = this.productTable.createProduct(product)
 
         switch (product.category) {
@@ -156,7 +200,9 @@ export class Engine {
                 })
                 break
         }
+
         this.scenarioTable.createScenario(createdProduct.id)
+
         this.initializeScenarioEntryRecursive(
             product.dispute,
             createdProduct.id,
@@ -165,10 +211,7 @@ export class Engine {
 
         this.notifySubscribers()
 
-        return this.getProduct(createdProduct.id) as Exclude<
-            GetProductReturnValue,
-            undefined
-        >
+        return this.getFullProduct(createdProduct.id) as FullProduct
     }
 
     createPerson(person: CreatePersonArg) {
@@ -196,26 +239,32 @@ export class Engine {
 
         this.notifySubscribers()
 
-        return this.getPerson(createdPerson.id) as Exclude<
-            GetPersonReturnValue,
-            undefined
-        >
+        return this.getFullPerson(createdPerson.id) as FullPerson
     }
 
     approveProduct(productId: string, moderatorId: string) {
         const product = this.productTable.getProduct(productId)
         if (!product || product.status === ProductStatus.APPROVED) return
-        product.status = ProductStatus.APPROVED
-        product.moderatorId = moderatorId
+
+        this.productTable.updateProduct({
+            ...product,
+            status: ProductStatus.APPROVED,
+            moderatorId,
+        })
+
         this.notifySubscribers()
     }
 
     rejectProduct(productId: string, moderatorId: string) {
         const product = this.productTable.getProduct(productId)
         if (!product || product.status === ProductStatus.REJECTED) return
-        product.status = ProductStatus.REJECTED
-        product.moderatorId = moderatorId
-        this.productTable.updateProduct(product)
+
+        this.productTable.updateProduct({
+            ...product,
+            status: ProductStatus.REJECTED,
+            moderatorId,
+        })
+
         this.notifySubscribers()
     }
 
@@ -246,7 +295,12 @@ export class Engine {
             return
         }
 
+        if (scenarioEntry.type === ScenarioEntryType.MODERATOR_ADMIT) {
+            this.approveProduct(productId, moderatorId)
+        }
+
         this.createChatMessage(productId, moderatorId, scenarioEntry.text)
+
         this.scenarioTable.updateScenario({
             ...scenario,
             lastScenarioEntryId: scenarioEntry.id,
@@ -260,39 +314,85 @@ export class Engine {
         return this.time
     }
 
+    getMaxTime() {
+        return this.maxTime
+    }
+
     getIsEnd() {
         return this.end
     }
 
-    getProducts() {
-        return this.productTable
-            .getProducts()
-            .map(
-                (product) =>
-                    this.getProduct(product.id) as Exclude<
-                        GetProductReturnValue,
-                        undefined
-                    >
+    getChats(): Chat[] {
+        const mapFn = (product: FullProduct) => {
+            const lastMessage = this.chatMessageTable.getLastChatMessage(
+                product.id
             )
+
+            const fullLastMessage = lastMessage
+                ? this.getFullChatMessage(lastMessage.id)
+                : undefined
+
+            return {
+                fullProduct: product,
+                lastMessage: fullLastMessage,
+            }
+        }
+
+        const filterFn = (
+            chat: Omit<Chat, 'lastMessage'> & {
+                lastMessage: FullChatMessage | undefined
+            }
+        ) => {
+            return chat.lastMessage !== undefined
+        }
+
+        return this.getFullProducts().map(mapFn).filter(filterFn) as Chat[]
     }
 
-    getProduct(id: string): GetProductReturnValue {
-        const product = this.productTable.getProduct(id)
+    getFullProducts(): FullProduct[] {
+        return this.productTable
+            .getProducts()
+            .map((product) => this.getFullProduct(product.id) as FullProduct)
+            .filter((product) => product !== undefined)
+    }
+
+    getFullProduct(productId: string): FullProduct | undefined {
+        const product = this.productTable.getProduct(productId)
 
         if (!product) return undefined
 
-        let result:
-            | ProductRefrigerator
-            | ProductLaptop
-            | ProductMicrowave
-            | ProductFanHeater
-            | undefined
+        const seller = this.getFullPerson(product.sellerId) as PersonSeller
 
+        if (!seller) return undefined
+
+        const moderator = product.moderatorId
+            ? (this.getFullPerson(product.moderatorId) as PersonModerator)
+            : null
+
+        const images = this.productImageTable.getImagesOfProduct(productId)
+        const tags = this.getProductTags(productId)
+        const hasMessages =
+            this.chatMessageTable.getChatMessages(productId).length > 0
+
+        let result: FullProduct | undefined
+
+        const partOfResult: Pick<
+            FullProduct,
+            'seller' | 'moderator' | 'images' | 'tags' | 'hasMessages'
+        > = {
+            seller,
+            moderator,
+            images,
+            tags,
+            hasMessages,
+        }
         switch (product.category) {
             case ProductCategory.REFRIGERATOR: {
-                const refrigerator = this.refrigeratorTable.getRefrigerator(id)
+                const refrigerator =
+                    this.refrigeratorTable.getRefrigerator(productId)
                 if (!refrigerator) return undefined
                 result = {
+                    ...partOfResult,
                     ...omit(product, ['category']),
                     ...omit(refrigerator, ['productId']),
                     category: ProductCategory.REFRIGERATOR,
@@ -300,9 +400,10 @@ export class Engine {
                 break
             }
             case ProductCategory.LAPTOP: {
-                const laptop = this.laptopTable.getLaptop(id)
+                const laptop = this.laptopTable.getLaptop(productId)
                 if (!laptop) return undefined
                 result = {
+                    ...partOfResult,
                     ...omit(product, ['category']),
                     ...omit(laptop, ['productId']),
                     category: ProductCategory.LAPTOP,
@@ -310,9 +411,10 @@ export class Engine {
                 break
             }
             case ProductCategory.MICROWAVE: {
-                const microwave = this.microwaveTable.getMicrowave(id)
+                const microwave = this.microwaveTable.getMicrowave(productId)
                 if (!microwave) return undefined
                 result = {
+                    ...partOfResult,
                     ...omit(product, ['category']),
                     ...omit(microwave, ['productId']),
                     category: ProductCategory.MICROWAVE,
@@ -320,9 +422,10 @@ export class Engine {
                 break
             }
             case ProductCategory.FAN_HEATER: {
-                const fanHeater = this.fanHeaterTable.getFanHeater(id)
+                const fanHeater = this.fanHeaterTable.getFanHeater(productId)
                 if (!fanHeater) return undefined
                 result = {
+                    ...partOfResult,
                     ...omit(product, ['category']),
                     ...omit(fanHeater, ['productId']),
                     category: ProductCategory.FAN_HEATER,
@@ -336,12 +439,12 @@ export class Engine {
         return result
     }
 
-    getPerson(id: string): GetPersonReturnValue {
+    getFullPerson(id: string): FullPerson | undefined {
         const person = this.personTable.getPersonById(id)
 
         if (!person) return undefined
 
-        let result: PersonAdmin | PersonModerator | PersonSeller | undefined
+        let result: FullPerson | undefined
 
         switch (person.type) {
             case PersonType.ADMIN: {
@@ -384,7 +487,7 @@ export class Engine {
     getProductSeller(productId: string) {
         const product = this.productTable.getProduct(productId)
         if (!product) return undefined
-        const person = this.getPerson(product.sellerId)
+        const person = this.getFullPerson(product.sellerId)
         if (!person) return undefined
         return person as PersonSeller
     }
@@ -392,16 +495,44 @@ export class Engine {
     getProductModerator(productId: string) {
         const product = this.productTable.getProduct(productId)
         if (!product || !product.moderatorId) return undefined
-        const moderator = this.getPerson(product.moderatorId)
+        const moderator = this.getFullPerson(product.moderatorId)
         if (!moderator) return undefined
         return moderator as PersonModerator
     }
 
     getProductMessages(productId: string) {
-        return this.chatMessageTable.getChatMessages(productId)
+        const messages = this.chatMessageTable.getChatMessages(productId)
+        return messages
+            .map((message) => this.getFullChatMessage(message.id))
+            .filter((message) => message !== undefined)
     }
 
-    getProductCurrentScenarioEntries(productId: string) {
+    getProductTags(productId: string) {
+        const tagIds = this.productTagTable.getTagIdsOfProduct(productId)
+        const tags = tagIds
+            .map((tagId) => this.tagTable.getTag(tagId))
+            .filter((tag) => tag !== undefined)
+        return tags
+    }
+
+    getFullChatMessage(messageId: string): FullChatMessage | undefined {
+        const message = this.chatMessageTable.getChatMessage(messageId)
+        if (!message) return undefined
+
+        const person = this.getFullPerson(message.personId)
+        if (!person) return undefined
+
+        const product = this.getFullProduct(message.productId)
+        if (!product) return undefined
+
+        return {
+            ...message,
+            person,
+            product,
+        }
+    }
+
+    getProductCurrentScenarioEntryChildren(productId: string) {
         const scenario = this.scenarioTable.getScenario(productId)
 
         if (!scenario || !scenario.lastScenarioEntryId) return []
@@ -493,6 +624,82 @@ export class Engine {
         }
 
         return count
+    }
+
+    getFullAdminByLogin(login: string) {
+        const admins = this.adminTable.getAdmins()
+
+        const admin = admins.find((admin) => admin.login === login)
+
+        if (!admin) return undefined
+
+        const person = this.getFullPerson(admin.personId)
+
+        return person as PersonAdmin | undefined
+    }
+
+    getPersonModerator(moderatorId: string) {
+        const moderator = this.moderatorTable.getModerator(moderatorId)
+        if (!moderator) return undefined
+        return this.getFullPerson(moderator.personId) as
+            | PersonModerator
+            | undefined
+    }
+
+    getPersonModerators(): PersonModerator[] {
+        const moderators = this.moderatorTable.getModerators()
+        return moderators
+            .map((moderator) => this.getPersonModerator(moderator.personId))
+            .filter((moderator) => moderator !== undefined)
+    }
+
+    getPersonAdmin(adminId: string) {
+        const admin = this.adminTable.getAdmin(adminId)
+        if (!admin) return undefined
+        return this.getFullPerson(admin.personId) as PersonAdmin | undefined
+    }
+
+    getPersonAdmins(): PersonAdmin[] {
+        const admins = this.adminTable.getAdmins()
+        return admins
+            .map((admin) => this.getPersonAdmin(admin.personId))
+            .filter((admin) => admin !== undefined)
+    }
+
+    getModeratorStatistics(moderatorId: string) {
+        const moderator =
+            this.getPersonModerator(moderatorId) ??
+            this.getPersonAdmin(moderatorId)
+
+        if (!moderator) return undefined
+
+        const moderatorProducts = this.productTable
+            .getProducts()
+            .filter((product) => product.moderatorId === moderator.id)
+
+        const disputedProducts = moderatorProducts.filter(
+            (product) => product.status === ProductStatus.DISPUTED
+        )
+
+        const wonProducts = disputedProducts.filter(
+            (product) => product.status === ProductStatus.APPROVED
+        )
+
+        const lostProducts = disputedProducts.filter(
+            (product) => product.status === ProductStatus.REJECTED
+        )
+
+        return {
+            totalChecked: moderatorProducts.length,
+            totalDisputed: disputedProducts.length,
+            totalWon: wonProducts.length,
+            totalLost: lostProducts.length,
+            todayChecked: moderatorProducts.length,
+            todayDisputed: disputedProducts.length,
+            todayWon: wonProducts.length,
+            todayLost: lostProducts.length,
+            avgSpeed: 0,
+        }
     }
 
     getCounters() {
@@ -598,7 +805,8 @@ export class Engine {
 
             if (
                 fullScenario.lastTimestamp == null &&
-                fullScenario.lastScenarioEntryId == null
+                fullScenario.lastScenarioEntryId == null &&
+                fullScenario.product.status === ProductStatus.REJECTED
             ) {
                 if (fullScenario.seller.disputeFactor > Math.random()) {
                     this.startDispute(fullScenario.productId)
@@ -682,7 +890,9 @@ export class Engine {
             lastTimestamp: this.time,
         })
 
-        this.createChatMessage(productId, product.sellerId, nextEntry.text)
+        if (nextEntry.type !== ScenarioEntryType.SELLER_IGNORE) {
+            this.createChatMessage(productId, product.sellerId, nextEntry.text)
+        }
     }
 
     private createChatMessage(

@@ -1,0 +1,28 @@
+.wrapper {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.form {
+    width: 300px;
+}
+
+.login-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.login-link {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.login-link:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}

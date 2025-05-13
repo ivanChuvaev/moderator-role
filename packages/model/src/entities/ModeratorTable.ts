@@ -15,6 +15,10 @@ export class ModeratorTable {
         return this.moderators.get(personId)
     }
 
+    getModerators() {
+        return Array.from(this.moderators.values())
+    }
+
     removeModerator(personId: string) {
         this.moderators.delete(personId)
     }

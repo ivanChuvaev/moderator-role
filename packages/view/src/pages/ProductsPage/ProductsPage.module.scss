@@ -7,6 +7,12 @@
 
 .sidebar {
     width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.filter {
+    flex-grow: 1;
 }
 
 .content {

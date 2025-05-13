@@ -9,7 +9,8 @@
         "lib": ["DOM", "DOM.Iterable", "ESNext"],
         "paths": {
             "@view/*": ["src/*"],
-            "@model/*": ["../model/src/*"]
+            "@model/*": ["../model/src/*"],
+            "@model": ["../model"]
         }
     },
     "include": ["src/**/*"],

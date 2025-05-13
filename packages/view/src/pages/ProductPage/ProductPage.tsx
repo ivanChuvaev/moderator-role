@@ -1,12 +1,17 @@
 import { FC } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
-import { products } from '@view/mockData'
 import { Button } from '@view/components/Button/Button'
 import { ProductCard } from '@view/components/ProductCard/ProductCard'
 
 import styles from './ProductPage.module.scss'
 import { PageLayout } from '@view/layouts/PageLayout'
+import { Protected } from '@view/components/Protected'
+import { useGameData } from '@view/hooks/useGameData'
+import { ProductCharacteristics } from './ProductCharacteristics'
+import { useAuthorizationStorage } from '@view/storageModule'
+import { ProductStatus } from '@model/index'
+import { Paper } from '@view/ui/Paper'
 
 interface ProductPageProps {
     productId?: number
@@ -14,40 +19,60 @@ interface ProductPageProps {
 
 export const ProductPage: FC<ProductPageProps> = () => {
     const { id } = useParams<{ id: string }>()
-    const navigate = useNavigate()
-    const product = products.find((product) => product.id === Number(id))
 
-    const handleClick = () => {
-        navigate(`/chats/${product?.id}`)
+    const [authorizationStore] = useAuthorizationStorage()
+
+    const product = useGameData((engine) =>
+        id ? engine.getFullProduct(id) : undefined
+    )
+
+    const admin = useGameData((engine) =>
+        authorizationStore
+            ? engine.getFullAdminByLogin(authorizationStore.login)
+            : null
+    )
+
+    const approveProduct = useGameData((engine) => engine.approveProduct)
+    const rejectProduct = useGameData((engine) => engine.rejectProduct)
+
+    const handleApprove = () => {
+        if (!product || !admin) return
+        approveProduct(product.id, admin.id)
     }
+
+    const handleReject = () => {
+        if (!product || !admin) return
+        rejectProduct(product.id, admin.id)
+    }
+
     if (!product) {
         return <h3>Товар не найден</h3>
     }
 
     return (
-        <PageLayout>
-            <main className={styles.product_main}>
-                <div className={styles.product_page}>
-                    <ProductCard product={product} onOpenChat={handleClick} />
-                    <div className={styles.product_description}>
-                        <h3>Описание товара</h3>
-                        <div>Описание товара</div>
-                    </div>
-                </div>
+        <Protected>
+            <PageLayout>
+                <div className={styles['product-page']}>
+                    <ProductCard product={product} />
 
-                <div className={styles.product_description}>
-                    <h3>Характеристики товара</h3>
-                    <span>{product?.diagonal}</span>
-                    <span>{product?.depth}</span>
-                    <span>{product?.mass}</span>
-                    <span>{product?.volume}</span>
-                </div>
+                    <Paper className={styles['characteristics-paper']}>
+                        <h3>Характеристики товара</h3>
+                        <ProductCharacteristics
+                            product={product}
+                            className={styles['characteristics']}
+                        />
+                    </Paper>
 
-                <div className={styles.product_actions}>
-                    <Button label="Отклонить" variant="danger" />
-                    <Button label="Принять" />
+                    {product.status === ProductStatus.PENDING && (
+                        <div className={styles.product_actions}>
+                            <Button variant="danger" onClick={handleReject}>
+                                Отклонить
+                            </Button>
+                            <Button onClick={handleApprove}>Принять</Button>
+                        </div>
+                    )}
                 </div>
-            </main>
-        </PageLayout>
+            </PageLayout>
+        </Protected>
     )
 }

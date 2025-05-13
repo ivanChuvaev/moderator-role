@@ -2,11 +2,27 @@
     flex-grow: 1;
     display: flex;
     align-items: center;
-    width: 650px;
+    justify-content: center;
     margin: 0 auto;
 }
 
-.content {
-    flex-grow: 1;
-    overflow: auto;
+.form {
+    width: 300px;
+}
+
+.register-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.register-link {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.register-link:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
 }

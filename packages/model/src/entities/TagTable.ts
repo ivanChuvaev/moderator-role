@@ -23,8 +23,8 @@ export class TagTable {
         return Array.from(this.tags.values())
     }
 
-    getTagById(id: string): Tag | undefined {
-        return this.tags.get(id)
+    getTag(tagId: string): Tag | undefined {
+        return this.tags.get(tagId)
     }
 
     removeTag(id: string): void {

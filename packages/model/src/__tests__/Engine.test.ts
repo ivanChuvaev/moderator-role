@@ -70,12 +70,22 @@ describe('Engine', () => {
 
     describe('Create product', () => {
         it('Should create a laptop product', () => {
+            const seller = engine.createPerson({
+                type: PersonType.SELLER,
+                firstName: 'John',
+                lastName: 'Doe',
+                middleName: 'Michael',
+                sex: Sex.MALE,
+                disputeFactor: 0.5,
+                avatarSrc: 'default-avatar.png',
+            })
+
             const laptop = engine.createProduct({
                 category: ProductCategory.LAPTOP,
                 name: 'MacBook Pro',
                 price: 1299,
                 power: 100,
-                sellerId: '550e8400-e29b-41d4-a716-446655440000',
+                sellerId: seller.id,
                 width: 10,
                 height: 10,
                 mass: 10,
@@ -93,20 +103,30 @@ describe('Engine', () => {
             expect(laptop.category).toBe(ProductCategory.LAPTOP)
             expect(laptop.name).toBe('MacBook Pro')
             expect(laptop.price).toBe(1299)
-            expect(laptop.sellerId).toBe('550e8400-e29b-41d4-a716-446655440000')
+            expect(laptop.sellerId).toBe(seller.id)
             expect(laptop.status).toBe(ProductStatus.PENDING)
 
-            const products = engine.getProducts()
+            const products = engine.getFullProducts()
 
             expect(products.length).toBe(1)
             expect(products[0]).toStrictEqual(laptop)
         })
         it('Should create a refrigerator product', () => {
+            const seller = engine.createPerson({
+                type: PersonType.SELLER,
+                firstName: 'John',
+                lastName: 'Doe',
+                middleName: 'Michael',
+                sex: Sex.MALE,
+                disputeFactor: 0.5,
+                avatarSrc: 'default-avatar.png',
+            })
+
             const refrigerator = engine.createProduct({
                 category: ProductCategory.REFRIGERATOR,
                 name: 'Refrigerator',
                 price: 1299,
-                sellerId: '550e8400-e29b-41d4-a716-446655440000',
+                sellerId: seller.id,
                 width: 10,
                 height: 10,
                 mass: 10,
@@ -123,17 +143,25 @@ describe('Engine', () => {
             expect(refrigerator.category).toBe(ProductCategory.REFRIGERATOR)
             expect(refrigerator.name).toBe('Refrigerator')
             expect(refrigerator.price).toBe(1299)
-            expect(refrigerator.sellerId).toBe(
-                '550e8400-e29b-41d4-a716-446655440000'
-            )
+            expect(refrigerator.sellerId).toBe(seller.id)
             expect(refrigerator.status).toBe(ProductStatus.PENDING)
         })
         it('Should create a microwave product', () => {
+            const seller = engine.createPerson({
+                type: PersonType.SELLER,
+                firstName: 'John',
+                lastName: 'Doe',
+                middleName: 'Michael',
+                sex: Sex.MALE,
+                disputeFactor: 0.5,
+                avatarSrc: 'default-avatar.png',
+            })
+
             const microwave = engine.createProduct({
                 category: ProductCategory.MICROWAVE,
                 name: 'Microwave',
                 price: 1299,
-                sellerId: '550e8400-e29b-41d4-a716-446655440000',
+                sellerId: seller.id,
                 width: 10,
                 height: 10,
                 mass: 10,
@@ -153,9 +181,7 @@ describe('Engine', () => {
             expect(microwave.category).toBe(ProductCategory.MICROWAVE)
             expect(microwave.name).toBe('Microwave')
             expect(microwave.price).toBe(1299)
-            expect(microwave.sellerId).toBe(
-                '550e8400-e29b-41d4-a716-446655440000'
-            )
+            expect(microwave.sellerId).toBe(seller.id)
             expect(microwave.status).toBe(ProductStatus.PENDING)
         })
     })
@@ -236,7 +262,7 @@ describe('Engine', () => {
             engine.approveProduct(laptop.id, moderator.id)
 
             // Get the updated product
-            const updatedProduct = engine.getProduct(laptop.id)!
+            const updatedProduct = engine.getFullProduct(laptop.id)!
 
             // Verify product is now approved
             expect(updatedProduct.status).toBe(ProductStatus.APPROVED)
@@ -298,7 +324,7 @@ describe('Engine', () => {
         it('Rejected product should have REJECTED status', () => {
             engine.rejectProduct(laptop.id, admin.id)
 
-            laptop = engine.getProduct(laptop.id)!
+            laptop = engine.getFullProduct(laptop.id)!
 
             expect(laptop.status).toBe(ProductStatus.REJECTED)
         })
@@ -313,7 +339,7 @@ describe('Engine', () => {
 
             engine.tick()
 
-            laptop = engine.getProduct(laptop.id)!
+            laptop = engine.getFullProduct(laptop.id)!
 
             expect(laptop.status === ProductStatus.DISPUTED).toBe(true)
         })
@@ -352,7 +378,7 @@ describe('Engine', () => {
 
             engine.tick()
 
-            laptop2 = engine.getProduct(laptop2.id)!
+            laptop2 = engine.getFullProduct(laptop2.id)!
 
             expect(laptop2.status).toBe(ProductStatus.REJECTED)
         })
@@ -362,7 +388,7 @@ describe('Engine', () => {
 
             engine.tick()
 
-            laptop = engine.getProduct(laptop.id)!
+            laptop = engine.getFullProduct(laptop.id)!
 
             const messages = engine.getProductMessages(laptop.id)
             expect(messages[0].text).toBe('Initial dispute')
@@ -455,15 +481,14 @@ describe('Engine', () => {
 
             engine.tick()
 
-            laptop = engine.getProduct(laptop.id)!
+            laptop = engine.getFullProduct(laptop.id)!
 
             if (laptop.status !== ProductStatus.DISPUTED) {
                 throw new Error('Product should be disputed')
             }
 
-            const scenarioEntries = engine.getProductCurrentScenarioEntries(
-                laptop.id
-            )
+            const scenarioEntries =
+                engine.getProductCurrentScenarioEntryChildren(laptop.id)
 
             expect(scenarioEntries.length).toBe(2)
             expect(scenarioEntries[0].type).toBe(
@@ -480,9 +505,8 @@ describe('Engine', () => {
 
             engine.tick()
 
-            const scenarioEntries = engine.getProductCurrentScenarioEntries(
-                laptop.id
-            )
+            const scenarioEntries =
+                engine.getProductCurrentScenarioEntryChildren(laptop.id)
 
             engine.continueDisputeByModerator(
                 laptop.id,
@@ -495,12 +519,48 @@ describe('Engine', () => {
             expect(messages[0].text).toBe('Initial dispute')
             expect(messages[1].text).toBe(scenarioEntries[0].text)
         })
+        it('Should be Moderator admit nested', () => {
+            engine.rejectProduct(laptop.id, admin.id)
+
+            engine.tick()
+
+            let scenarioEntries = engine.getProductCurrentScenarioEntryChildren(
+                laptop.id
+            )
+
+            expect(scenarioEntries.length).toBe(2)
+            expect(scenarioEntries[0].text).toBe('Moderator admit')
+            expect(scenarioEntries[1].text).toBe('Moderator defend')
+
+            engine.continueDisputeByModerator(
+                laptop.id,
+                admin.id,
+                scenarioEntries[1].id
+            )
+
+            scenarioEntries = engine.getProductCurrentScenarioEntryChildren(
+                laptop.id
+            )
+
+            expect(scenarioEntries.length).toBe(1)
+            expect(scenarioEntries[0].text).toBe('Seller defend')
+
+            engine.tick()
+
+            scenarioEntries = engine.getProductCurrentScenarioEntryChildren(
+                laptop.id
+            )
+
+            expect(scenarioEntries.length).toBe(2)
+            expect(scenarioEntries[0].text).toBe('Moderator admit nested')
+            expect(scenarioEntries[1].text).toBe('Moderator defend nested')
+        })
         it('Dispute should be ended with seller admit after 3 ticks', () => {
             engine.rejectProduct(laptop.id, admin.id)
 
             engine.tick()
 
-            let scenarioEntries = engine.getProductCurrentScenarioEntries(
+            let scenarioEntries = engine.getProductCurrentScenarioEntryChildren(
                 laptop.id
             )
 
@@ -512,7 +572,9 @@ describe('Engine', () => {
 
             engine.tick()
 
-            scenarioEntries = engine.getProductCurrentScenarioEntries(laptop.id)
+            scenarioEntries = engine.getProductCurrentScenarioEntryChildren(
+                laptop.id
+            )
 
             expect(scenarioEntries.length).toBe(2)
             expect(scenarioEntries[0].text).toBe('Moderator admit nested')
@@ -526,7 +588,9 @@ describe('Engine', () => {
 
             engine.tick()
 
-            scenarioEntries = engine.getProductCurrentScenarioEntries(laptop.id)
+            scenarioEntries = engine.getProductCurrentScenarioEntryChildren(
+                laptop.id
+            )
 
             expect(scenarioEntries.length).toBe(0)
 

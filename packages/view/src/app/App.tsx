@@ -5,8 +5,10 @@ import { ProductPage } from '@view/pages/ProductPage'
 import { ProductsPage } from '@view/pages/ProductsPage'
 import { GlobalLayout } from '@view/layouts/GlobalLayout/GlobalLayout'
 import { ModeratorsPage } from '@view/pages/ModeratorsPage'
-import { ChatPage, ChatPageChat } from '@view/pages/ChatPage'
+import { ChatPage } from '@view/pages/ChatPage'
 import { LoginPage } from '@view/pages/LoginPage'
+import { RegisterPage } from '@view/pages/RegisterPage'
+import { ChatsPage } from '@view/pages/ChatsPage/ChatsPage'
 
 const router = createBrowserRouter([
     {
@@ -16,6 +18,10 @@ const router = createBrowserRouter([
             {
                 path: '/login',
                 element: <LoginPage />,
+            },
+            {
+                path: '/register',
+                element: <RegisterPage />,
             },
             {
                 path: '/',
@@ -35,15 +41,15 @@ const router = createBrowserRouter([
             },
             {
                 path: '/chats',
-                element: <ChatPage />,
+                element: <ChatsPage />,
                 children: [
                     {
                         path: '',
-                        element: <ChatPageChat />,
+                        element: <ChatPage />,
                     },
                     {
                         path: ':productId',
-                        element: <ChatPageChat />,
+                        element: <ChatPage />,
                     },
                 ],
             },

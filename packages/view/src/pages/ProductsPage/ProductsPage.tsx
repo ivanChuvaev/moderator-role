@@ -1,25 +1,25 @@
 import { Content } from '@view/components/Content/Content'
-import { Sidebar } from '@view/components/Sidebar/Sidebar'
 import { PageLayout } from '@view/layouts/PageLayout'
 import { Paper } from '@view/ui/Paper'
 
 import styles from './ProductsPage.module.scss'
+import { Protected } from '@view/components/Protected'
+import { ProductFilter } from '@view/components/ProductFilter/ProductFilter'
+import { ProductsList } from '@view/components/ProductList'
 
 export const ProductsPage = () => {
     return (
-        <PageLayout fullHeight>
-            <div className={styles.wrapper}>
-                <Paper className={styles.sidebar}>
-                    <Sidebar showChats={false} />
-                </Paper>
-                <Paper className={styles.content}>
-                    <Content
-                        showChat={false}
-                        productId={1}
-                        onOpenChat={() => {}}
-                    />
-                </Paper>
-            </div>
-        </PageLayout>
+        <Protected>
+            <PageLayout fullHeight>
+                <div className={styles.wrapper}>
+                    <Paper className={styles.sidebar}>
+                        <ProductFilter className={styles.filter} />
+                    </Paper>
+                    <Paper className={styles.content}>
+                        <ProductsList className={styles.products} />
+                    </Paper>
+                </div>
+            </PageLayout>
+        </Protected>
     )
 }

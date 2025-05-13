@@ -1,56 +1,43 @@
-import React from 'react'
+import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import {
-    products,
-    sellerData,
-    personData,
-    chatMessageData,
-} from '@view/mockData'
-
 import styles from './ChatCard.module.scss'
+import { Chat } from '@model'
+import { translateProductStatus } from '@model'
+import cn from 'classnames'
 
 interface ChatCardProps {
-    productId: number
-    onClick?: () => void
+    chat: Chat
+    selected?: boolean
 }
 
-export const ChatCard: React.FC<ChatCardProps> = ({ productId }) => {
+export const ChatCard: FC<ChatCardProps> = (props) => {
+    const { chat, selected } = props
     const navigate = useNavigate()
-    const product = products.find((p) => p.id === productId)
-
-    const seller = sellerData[0]
-    const sellerPerson = personData.find((p) => p.id === seller.person_id)
-
-    const lastMessage = chatMessageData
-        .filter((msg) => msg.product_id === productId || msg.product_id === 101)
-        .sort((a, b) => b.date - a.date)[0]
-
-    const messageAuthor = personData.find(
-        (p) => p.id === lastMessage?.person_id
-    )
 
     const handleClick = () => {
-        navigate(`/chats/${productId}`)
-    }
-
-    if (!product || !sellerPerson) {
-        return <div className={styles.notFound}>Чат не найден</div>
+        if (selected) {
+            navigate('/chats')
+        } else {
+            navigate(`/chats/${chat.fullProduct.id}`)
+        }
     }
 
     return (
-        <div className={styles.chat_card} onClick={handleClick}>
+        <div
+            className={cn(styles['chat-card'], {
+                [styles['chat-card--selected']]: selected,
+            })}
+            onClick={handleClick}
+        >
             <div className={styles.header}>
-                <div className={styles.seller_info}>
-                    <span className={styles.seller_name}>
-                        {sellerPerson.first_name} {sellerPerson.last_name}
+                <div className={styles['seller-info']}>
+                    <span className={styles['seller-name']}>
+                        {chat.fullProduct.seller.firstName}{' '}
+                        {chat.fullProduct.seller.lastName}
                     </span>
-                    <span
-                        className={`${styles.status} ${
-                            styles[product.status.toLowerCase()]
-                        }`}
-                    >
-                        {product.status}
+                    <span className={styles.status}>
+                        {translateProductStatus(chat.fullProduct.status)}
                     </span>
                 </div>
             </div>
@@ -58,23 +45,28 @@ export const ChatCard: React.FC<ChatCardProps> = ({ productId }) => {
             <div className={styles.content}>
                 <div className={styles.avatar}>
                     <img
-                        src={sellerPerson.avatar_src}
-                        alt={`${sellerPerson.first_name} ${sellerPerson.last_name}`}
+                        src={
+                            chat.fullProduct.seller.avatarSrc ??
+                            '/images/empty.png'
+                        }
+                        alt="seller avatar"
                     />
                 </div>
 
-                <div className={styles.message_info}>
-                    <div className={styles.message_author}>
-                        {messageAuthor?.first_name} {messageAuthor?.last_name}
+                <div className={styles['message-info']}>
+                    <div className={styles['message-author']}>
+                        {chat.lastMessage.person.firstName}
+                        &nbsp;
+                        {chat.lastMessage.person.lastName}
                     </div>
-                    <div className={styles.message_text}>
-                        {lastMessage?.text || 'Нет сообщений'}
+                    <div className={styles['message-text']}>
+                        {chat.lastMessage.text}
                     </div>
                 </div>
             </div>
 
             <div className={styles.footer}>
-                <span className={styles.moderator_badge}>Модератор</span>
+                <span className={styles['moderator-badge']}>Модератор</span>
             </div>
         </div>
     )

@@ -1,8 +1,5 @@
 import { Engine } from '@model/Engine'
-import { PersonType } from '@model/enums/PersonType'
-import { ProductCategory } from '@model/enums/ProductCategory'
-import { ScenarioEntryType } from '@model/enums/ScenarioEntryType'
-import { Sex } from '@model/enums/Sex'
+import { initialize } from './initialize'
 
 export class Game {
     private engine: Engine
@@ -14,34 +11,7 @@ export class Game {
     }
 
     initialize() {
-        this.engine.reset()
-
-        const seller = this.engine.createPerson({
-            type: PersonType.SELLER,
-            firstName: 'Adam',
-            lastName: 'Smith',
-            middleName: 'Alexandrovich',
-            sex: Sex.MALE,
-            disputeFactor: 0.5,
-            avatarSrc: null,
-        })
-
-        this.engine.createProduct({
-            category: ProductCategory.REFRIGERATOR,
-            name: 'Refrigerator',
-            price: 100,
-            sellerId: seller.id,
-            width: 100,
-            height: 100,
-            depth: 100,
-            volume: 100,
-            mass: 100,
-            dispute: {
-                type: ScenarioEntryType.MODERATOR_DEFEND,
-                text: 'Ты чего меня отменил?',
-                children: [],
-            },
-        })
+        initialize(this.engine)
     }
 
     restart() {

@@ -1,71 +1,70 @@
 import React from 'react'
 
-import { moderatorData, personData } from '@view/mockData'
 import { Avatar } from '../Avatar'
 import { Button } from '../Button'
 
 import styles from './ModeratorCard.module.scss'
+import { PersonModerator, PersonAdmin, PersonType } from '@model'
+import { pluralize } from '@view/utils/pluralize'
+import { useGameData } from '@view/hooks/useGameData'
+import { translatePersonType } from '@model'
 
-interface ModeratorCardProps {
-    moderatorId: number
-    onFire?: (moderatorId: number) => void
+type ModeratorCardProps = {
+    person: PersonModerator | PersonAdmin
 }
 
-export const ModeratorCard: React.FC<ModeratorCardProps> = ({
-    moderatorId,
-    onFire,
-}) => {
-    const moderator = moderatorData.find((m) => m.person_id === moderatorId)
-    const person = personData.find((p) => p.id === moderatorId)
+export const ModeratorCard: React.FC<ModeratorCardProps> = (props) => {
+    const { person } = props
 
-    if (!moderator || !person) {
-        return <div className={styles.notFound}>Модератор не найден</div>
+    const statistics = useGameData((engine) =>
+        engine.getModeratorStatistics(person.id)
+    )
+
+    if (!person) {
+        return <div>Модератор не найден</div>
     }
 
-    const birthYear = Math.floor(moderator.birthdate / 10000)
-    const currentYear = new Date().getFullYear()
-    const age = currentYear - birthYear
-
-    const employmentYear = Math.floor(moderator.employment_date / 10000)
-    const experience = currentYear - employmentYear
-
-    const totalChecked = Math.floor(Math.random() * 500) + 100
-    const totalDisputed = Math.floor(totalChecked * 0.2)
-    const totalWon = Math.floor(totalDisputed * moderator.correct_factor)
-    const totalLost = totalDisputed - totalWon
-    const todayChecked = Math.floor(Math.random() * 20) + 5
-    const todayDisputed = Math.floor(todayChecked * 0.15)
-    const todayWon = Math.floor(todayDisputed * moderator.correct_factor)
-    const todayLost = todayDisputed - todayWon
-    const avgSpeed = Math.floor(totalChecked / (experience * 365)) || 1
-
-    const handleFire = () => {
-        if (onFire) onFire(moderatorId)
+    if (!statistics) {
+        return <div>У модератора нет статистики</div>
     }
 
     return (
         <div className={styles.moderator_card}>
             <div className={styles.header}>
                 <div className={styles.avatar}>
-                    <Avatar src={person.avatar_src} />
+                    <Avatar src={person.avatarSrc ?? 'images/empty.png'} />
                 </div>
 
                 <div className={styles.personal_info}>
                     <div className={styles.nameRow}>
                         <h3>
-                            {person.first_name} {person.last_name}
+                            {person.firstName} {person.lastName}
                         </h3>
+                        <span>{translatePersonType(person.type)}</span>
                         <div className={styles.actions}>
-                            <span className={styles.age}>{age} лет</span>
-                            <span className={styles.muk}>
-                                МУК: {moderator.correct_factor.toFixed(2)}
-                            </span>
-                            <Button
-                                label="Уволить"
-                                className={styles.fire_button}
-                                onClick={handleFire}
-                                variant="danger"
-                            />
+                            {person.type === PersonType.MODERATOR && (
+                                <span className={styles.age}>
+                                    {pluralize(
+                                        Math.floor(
+                                            (new Date().getTime() -
+                                                person.birthdate) /
+                                                1000 /
+                                                31536000
+                                        ),
+                                        '&_ год',
+                                        '&_ года',
+                                        '&_ лет'
+                                    )}
+                                </span>
+                            )}
+                            {person.type === PersonType.MODERATOR && (
+                                <Button
+                                    className={styles.fire_button}
+                                    variant="danger"
+                                >
+                                    Уволить
+                                </Button>
+                            )}
                         </div>
                     </div>
 
@@ -75,13 +74,13 @@ export const ModeratorCard: React.FC<ModeratorCardProps> = ({
                                 Всего проверено:
                             </span>
                             <span className={styles.stat_value}>
-                                {totalChecked}
+                                {statistics.totalChecked}
                             </span>
                         </div>
                         <div className={styles.stat_item}>
                             <span className={styles.stat_label}>Оспорено:</span>
                             <span className={styles.stat_value}>
-                                {totalDisputed}
+                                {statistics.totalDisputed}
                             </span>
                         </div>
                         <div className={styles.stat_item}>
@@ -89,7 +88,7 @@ export const ModeratorCard: React.FC<ModeratorCardProps> = ({
                                 Выиграно споров:
                             </span>
                             <span className={styles.stat_value}>
-                                {totalWon}
+                                {statistics.totalWon}
                             </span>
                         </div>
                         <div className={styles.stat_item}>
@@ -97,7 +96,7 @@ export const ModeratorCard: React.FC<ModeratorCardProps> = ({
                                 Проиграно споров:
                             </span>
                             <span className={styles.stat_value}>
-                                {totalLost}
+                                {statistics.totalLost}
                             </span>
                         </div>
                     </div>
@@ -106,23 +105,39 @@ export const ModeratorCard: React.FC<ModeratorCardProps> = ({
 
             <div className={styles.details}>
                 <div className={styles.detail_item}>
-                    <span className={styles.detail_label}>Стаж:</span>
-                    <span className={styles.detail_value}>
-                        {experience} лет
-                    </span>
+                    {person.type === PersonType.MODERATOR && (
+                        <>
+                            <span className={styles.detail_label}>Стаж:</span>
+                            <span className={styles.detail_value}>
+                                {pluralize(
+                                    Math.floor(
+                                        (new Date().getTime() -
+                                            person.employmentDate) /
+                                            1000 /
+                                            31536000
+                                    ),
+                                    '&_ год',
+                                    '&_ года',
+                                    '&_ лет'
+                                )}
+                            </span>
+                        </>
+                    )}
                 </div>
-                <div className={styles.detailItem}>
-                    <span className={styles.detail_label}>Зарплата:</span>
-                    <span className={styles.detail_value}>
-                        ${moderator.salary}
-                    </span>
-                </div>
+                {person.type === PersonType.MODERATOR && (
+                    <div className={styles.detailItem}>
+                        <span className={styles.detail_label}>Зарплата:</span>
+                        <span className={styles.detail_value}>
+                            ₽{person.salary}
+                        </span>
+                    </div>
+                )}
                 <div className={styles.detailItem}>
                     <span className={styles.detail_label}>
                         Скорость проверки:
                     </span>
                     <span className={styles.detail_value}>
-                        {avgSpeed} товаров/день
+                        {statistics.avgSpeed} товаров/день
                     </span>
                 </div>
             </div>
@@ -134,7 +149,7 @@ export const ModeratorCard: React.FC<ModeratorCardProps> = ({
                             Проверено сегодня:
                         </span>
                         <span className={styles.today_value}>
-                            {todayChecked}
+                            {statistics.todayChecked}
                         </span>
                     </div>
                     <div className={styles.todayStat}>
@@ -142,7 +157,7 @@ export const ModeratorCard: React.FC<ModeratorCardProps> = ({
                             Оспорено сегодня:
                         </span>
                         <span className={styles.today_value}>
-                            {todayDisputed}
+                            {statistics.todayDisputed}
                         </span>
                     </div>
                 </div>
@@ -151,13 +166,17 @@ export const ModeratorCard: React.FC<ModeratorCardProps> = ({
                         <span className={styles.today_label}>
                             Проиграно сегодня:
                         </span>
-                        <span className={styles.today_value}>{todayLost}</span>
+                        <span className={styles.today_value}>
+                            {statistics.todayLost}
+                        </span>
                     </div>
                     <div className={styles.todayStat}>
                         <span className={styles.today_label}>
                             Выиграно сегодня:
                         </span>
-                        <span className={styles.today_value}>{todayWon}</span>
+                        <span className={styles.today_value}>
+                            {statistics.todayWon}
+                        </span>
                     </div>
                 </div>
             </div>

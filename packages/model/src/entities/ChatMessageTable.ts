@@ -22,10 +22,19 @@ export class ChatMessageTable {
         return message
     }
 
-    getChatMessages(productId: string) {
+    getChatMessage(messageId: string): ChatMessage | undefined {
+        return this.messages.find((message) => message.id === messageId)
+    }
+
+    getChatMessages(productId: string): ChatMessage[] {
         return this.messages.filter(
             (message) => message.productId === productId
         )
+    }
+
+    getLastChatMessage(productId: string): ChatMessage | undefined {
+        const messages = this.getChatMessages(productId)
+        return messages[messages.length - 1]
     }
 
     serialize() {

@@ -5,8 +5,7 @@ import { useGameData } from '@view/hooks/useGameData'
 import { FC } from 'react'
 import { game } from '@view/game'
 
-export const GameResultModal: FC = ({
-}) => {
+export const GameResultModal: FC = ({}) => {
     const isEnd = useGameData((engine) => engine.getIsEnd())
 
     const isWinner = true
@@ -57,10 +56,11 @@ export const GameResultModal: FC = ({
                         <Button
                             className={styles.restart_button}
                             onClick={onRestart}
-                            label="Играть снова"
-                        />
+                        >
+                            Играть снова
+                        </Button>
                         <Dialog.Close>
-                            <Button label="Закрыть" />
+                            <Button>Закрыть</Button>
                         </Dialog.Close>
                     </div>
                 </Dialog.Popup>

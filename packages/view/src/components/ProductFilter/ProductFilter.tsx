@@ -1,14 +1,18 @@
 import { FC } from 'react'
 
-export const ProductFilter: FC<any> = () => {
+import styles from './ProductFilter.module.scss'
+import cn from 'classnames'
+
+type ProductFilterProps = {
+    className?: string
+}
+
+export const ProductFilter: FC<ProductFilterProps> = (props) => {
+    const { className } = props
+
     return (
-        <div>
-            <h1>Фильтры</h1>
-            <div>
-                <h3>Фильтр 1</h3>
-                <h3>Фильтр 2</h3>
-                <h3>Фильтр 3</h3>
-            </div>
+        <div className={cn(styles['product-filter'], className)}>
+            <div className={styles['message']}>Filters</div>
         </div>
     )
 }

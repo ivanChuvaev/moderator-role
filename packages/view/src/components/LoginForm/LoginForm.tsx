@@ -1,13 +1,21 @@
 import { Field } from '@base-ui-components/react/field'
 import { Form } from '@base-ui-components/react/form'
-import { validateLoginForm } from '../../utils/loginValidation'
+import { validateLoginForm } from '../../utils/validateLoginForm'
 import styles from './LoginForm.module.scss'
 import { Button } from '../Button'
 import { useNavigate } from 'react-router-dom'
 import { FC, useState } from 'react'
+import { useAuthorizationStorage } from '@view/storageModule'
 
-export const LoginForm: FC = () => {
+type LoginFormProps = {
+    className?: string
+}
+
+export const LoginForm: FC<LoginFormProps> = (props) => {
+    const { className } = props
     const navigate = useNavigate()
+
+    const [, setAuthorizationStorage] = useAuthorizationStorage()
 
     const [errors, setErrors] = useState<{
         login?: string
@@ -26,83 +34,65 @@ export const LoginForm: FC = () => {
         }
 
         const validationErrors = validateLoginForm(values)
+
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors)
             return
         }
 
-        setLoading(true)
+        setAuthorizationStorage({
+            login: values.login,
+            password: values.password,
+        })
 
-        try {
-            const response = await fakeLogin(values.login, values.password)
-            if (response.success) {
-                navigate('/')
-            } else {
-                setErrors({
-                    login: response.error || 'Неверные учетные данные',
-                    password: response.error || 'Неверные учетные данные',
-                })
-            }
-        } catch (error) {
-            setErrors({
-                login: 'Ошибка соединения',
-                password: 'Ошибка соединения',
-            })
-        } finally {
-            setLoading(false)
-        }
+        navigate('/')
     }
 
     return (
         <Form
-            className={styles.Form}
+            className={className}
             errors={errors}
             onClearErrors={() => setErrors({})}
             onSubmit={handleSubmit}
         >
-            <Field.Root name="login" className={styles.Field}>
-                <Field.Label className={styles.Label}>Логин</Field.Label>
-                <Field.Control
-                    type="text"
-                    required
-                    placeholder="Введите логин"
-                    className={styles.Input}
-                    disabled={loading}
-                />
-                <Field.Error className={styles.Error} />
+            <Field.Root name="login" className={styles.field}>
+                <Field.Label className={styles.label}>Логин</Field.Label>
+                <div className={styles['input-wrapper']}>
+                    <Field.Control
+                        type="text"
+                        required
+                        autoComplete="login"
+                        placeholder="Введите логин"
+                        className={styles.input}
+                        disabled={loading}
+                    />
+                </div>
+                <Field.Error className={styles.error} />
             </Field.Root>
 
-            <Field.Root name="password" className={styles.Field}>
-                <Field.Label className={styles.Label}>Пароль</Field.Label>
-                <Field.Control
-                    type="password"
-                    required
-                    placeholder="Введите пароль"
-                    className={styles.Input}
-                    disabled={loading}
-                />
-                <Field.Error className={styles.Error} />
+            <Field.Root name="password" className={styles.field}>
+                <Field.Label className={styles.label}>Пароль</Field.Label>
+                <div className={styles['input-wrapper']}>
+                    <Field.Control
+                        type="password"
+                        required
+                        autoComplete="current-password"
+                        placeholder="Введите пароль"
+                        className={styles.input}
+                        disabled={loading}
+                    />
+                </div>
+                <Field.Error className={styles.error} />
             </Field.Root>
 
             <Button
                 disabled={loading}
                 type="submit"
-                className={styles.Button}
-                label={loading ? 'Играть...' : 'Играть'}
-            />
+                className={styles.button}
+                loading={loading}
+            >
+                Войти
+            </Button>
         </Form>
     )
-}
-
-async function fakeLogin(login: string, password: string) {
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    if (login === 'admin' && password === 'admin123') {
-        return { success: true }
-    }
-
-    return {
-        success: false,
-        error: 'Неверный логин или пароль',
-    }
 }

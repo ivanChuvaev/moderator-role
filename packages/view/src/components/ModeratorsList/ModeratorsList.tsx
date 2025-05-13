@@ -1,23 +1,26 @@
 import { FC } from 'react'
 
-import { moderatorData } from '@view/mockData'
 import { ModeratorCard } from '../ModeratorCard'
 
 import styles from './ModeratorsList.module.scss'
+import { useGameData } from '@view/hooks/useGameData'
+import cn from 'classnames'
 
-interface ModeratorsListProps {}
+type ModeratorsListProps = {
+    className?: string
+}
 
-export const ModeratorsList: FC<ModeratorsListProps> = () => {
+export const ModeratorsList: FC<ModeratorsListProps> = ({ className }) => {
+    const moderators = useGameData((engine) => [
+        ...engine.getPersonAdmins(),
+        ...engine.getPersonModerators(),
+    ])
+
     return (
-        <div className={styles.main_content}>
-            <div className={styles.products_container}>
-                {moderatorData.map((moderator) => (
-                    <ModeratorCard
-                        key={moderator.person_id}
-                        moderatorId={moderator.person_id}
-                    />
-                ))}
-            </div>
+        <div className={cn(styles['moderators-list'], className)}>
+            {moderators.map((moderator) => (
+                <ModeratorCard key={moderator.id} person={moderator} />
+            ))}
         </div>
     )
 }

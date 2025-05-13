@@ -15,6 +15,10 @@ export class AdminTable {
         return this.admins.get(personId)
     }
 
+    getAdmins() {
+        return Array.from(this.admins.values())
+    }
+
     removeAdmin(personId: string) {
         this.admins.delete(personId)
     }

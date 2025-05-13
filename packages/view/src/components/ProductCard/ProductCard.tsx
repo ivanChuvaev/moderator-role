@@ -1,44 +1,57 @@
-import React, { useState } from 'react'
+import { FC } from 'react'
 import { Link } from 'react-router-dom'
 
-import { Product } from '../../types'
 import { Button } from '../Button'
 
 import styles from './ProductCard.module.scss'
+import { FullProduct } from '@model'
+import { translateProductStatus, translateProductCategory } from '@model'
+import { Paper } from '@view/ui/Paper'
 
 interface ProductCardProps {
-    product: Product
+    product: FullProduct
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+export const ProductCard: FC<ProductCardProps> = (props) => {
+    const { product } = props
     return (
-        <div className={styles.product_card_wrapper}>
+        <Paper className={styles['product-card']}>
             <Link to={`/product/${product.id}`}>
-                <div
-                    className={styles.product_image}
-                    style={{ backgroundImage: `url(${product.img})` }}
+                <img
+                    className={styles.image}
+                    src={product.images[0] ?? '/images/empty.png'}
+                    alt="product"
                 />
             </Link>
-            <div className={styles.product_info}>
-                <div className={styles.product_info_header}>
-                    <h3 className={styles.product_name}>{product.name}</h3>
-                    <span>{product.status}</span>
-                </div>
-
-                <div className={styles.product_details}>
-                    <div className={styles.product_category}>
-                        {product.category}
-                    </div>
-                    <div className={styles.product_tags}>
-                        {product.tags?.join(', ')}
+            <div className={styles.info}>
+                <div className={styles['info__header']}>
+                    <h3 className={styles['info__name']}>{product.name}</h3>
+                    <div className={styles['info__status']}>
+                        {translateProductStatus(product.status)}
                     </div>
                 </div>
-                <div className={styles.seller}> {product.seller}</div>
-                <div className={styles.product_actions}>
-                    <Button label="Чат" />
-                    <Button label="Отложить" variant="secondary" />
+                <div className={styles['info__details']}>
+                    <div className={styles['info__category']}>
+                        {translateProductCategory(product.category)}
+                    </div>
+                    {product.tags && product.tags.length > 0 && (
+                        <div className={styles['info__tags']}>
+                            {product.tags.join(', ')}
+                        </div>
+                    )}
+                </div>
+                <div className={styles['info__seller']}>
+                    {product.seller.firstName} {product.seller.lastName}
+                </div>
+                <div className={styles['info__actions']}>
+                    {product.hasMessages && (
+                        <Link to={`/chats/${product.id}`}>
+                            <Button>Чат</Button>
+                        </Link>
+                    )}
+                    <Button variant="secondary">Отложить</Button>
                 </div>
             </div>
-        </div>
+        </Paper>
     )
 }

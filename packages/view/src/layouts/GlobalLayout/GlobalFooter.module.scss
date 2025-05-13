@@ -1,6 +1,6 @@
 .footer {
-    background-color: var(--secondary-color);
-    color: var(--background-color);
+    background-color: var(--primary-color);
+    color: var(--text-primary-inverted-color);
     padding: 1rem;
     margin-top: auto;
 }
@@ -28,10 +28,10 @@
 }
 
 .footer_nav a {
-    color: var(--background-color);
+    color: var(--text-primary-inverted-color);
     text-decoration: none;
 }
 
 .footer_copyright {
-    color: var(--secondary-text-color);
+    color: var(--text-neutral-color);
 }
