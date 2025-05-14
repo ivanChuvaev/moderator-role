@@ -64,12 +64,12 @@ export const ProductPage: FC<ProductPageProps> = () => {
                     </Paper>
 
                     {product.status === ProductStatus.PENDING && (
-                        <div className={styles.product_actions}>
+                        <Paper className={styles.actions}>
                             <Button variant="danger" onClick={handleReject}>
                                 Отклонить
                             </Button>
                             <Button onClick={handleApprove}>Принять</Button>
-                        </div>
+                        </Paper>
                     )}
                 </div>
             </PageLayout>

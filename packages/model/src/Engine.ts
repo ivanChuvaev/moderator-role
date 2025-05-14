@@ -33,16 +33,11 @@ import { Scenario } from './types/Scenario'
 import { Seller } from './types/Seller'
 import { Prettify } from './types/utils'
 import { omit } from './utils/omit'
-
-type ProductDispute = {
-    type: ScenarioEntryType
-    text: string
-    children: ProductDispute[]
-}
+import { ProductScenarioEntry } from './types/ProductScenarioEntry'
 
 type CreateProductArg = Prettify<
     {
-        dispute: ProductDispute
+        dispute: ProductScenarioEntry
     } & (
         | Omit<ProductRefrigerator, 'id' | 'moderatorId' | 'status'>
         | Omit<ProductLaptop, 'id' | 'moderatorId' | 'status'>
@@ -156,9 +151,28 @@ export class Engine {
 
         this.disputeTick()
 
+        const products = this.productTable.getProducts()
+
+        let allProductsAreApprovedOrRejected = products.every((product) => {
+            const currentScenarioEntry = this.getProductCurrentScenarioEntry(
+                product.id
+            )
+
+            const isIgnored =
+                product.status === ProductStatus.DISPUTED &&
+                currentScenarioEntry &&
+                currentScenarioEntry.type === ScenarioEntryType.SELLER_IGNORE
+
+            return (
+                product.status === ProductStatus.APPROVED ||
+                product.status === ProductStatus.REJECTED ||
+                isIgnored
+            )
+        })
+
         this.time += 1
 
-        if (this.time >= this.maxTime) {
+        if (this.time >= this.maxTime || allProductsAreApprovedOrRejected) {
             this.end = true
         }
 
@@ -286,12 +300,10 @@ export class Engine {
             return
         }
 
-        const isEntryTypeModerator = [
-            ScenarioEntryType.MODERATOR_ADMIT,
-            ScenarioEntryType.MODERATOR_DEFEND,
-        ].includes(scenarioEntry.type)
-
-        if (!isEntryTypeModerator) {
+        if (
+            scenarioEntry.type !== ScenarioEntryType.MODERATOR_ADMIT &&
+            scenarioEntry.type !== ScenarioEntryType.MODERATOR_DEFEND
+        ) {
             return
         }
 
@@ -320,6 +332,34 @@ export class Engine {
 
     getIsEnd() {
         return this.end
+    }
+
+    getGameStatistics() {
+        const products = this.productTable.getProducts()
+
+        const approvedCount = products.filter(
+            (product) => product.status === ProductStatus.APPROVED
+        ).length
+
+        const rejectedCount = products.filter(
+            (product) => product.status === ProductStatus.REJECTED
+        ).length
+
+        const disputedCount = products.filter(
+            (product) => product.status === ProductStatus.DISPUTED
+        ).length
+
+        const wrongCount = this.getWrongCount()
+
+        const isWinner = wrongCount < 1
+
+        return {
+            approvedCount,
+            rejectedCount,
+            disputedCount,
+            wrongCount,
+            isWinner,
+        }
     }
 
     getChats(): Chat[] {
@@ -859,7 +899,12 @@ export class Engine {
         const product = this.productTable.getProduct(productId)
         const scenario = this.scenarioTable.getScenario(productId)
 
-        if (!product || !scenario || scenario.lastScenarioEntryId === null) {
+        if (
+            !product ||
+            !product.moderatorId ||
+            !scenario ||
+            scenario.lastScenarioEntryId === null
+        ) {
             return
         }
 
@@ -874,13 +919,11 @@ export class Engine {
 
         const nextEntry = scenarioEntryChildren[0]
 
-        const isEntryTypeSeller = [
-            ScenarioEntryType.SELLER_ADMIT,
-            ScenarioEntryType.SELLER_DEFEND,
-            ScenarioEntryType.SELLER_IGNORE,
-        ].includes(nextEntry.type)
-
-        if (!isEntryTypeSeller) {
+        if (
+            nextEntry.type !== ScenarioEntryType.SELLER_ADMIT &&
+            nextEntry.type !== ScenarioEntryType.SELLER_DEFEND &&
+            nextEntry.type !== ScenarioEntryType.SELLER_IGNORE
+        ) {
             return
         }
 
@@ -889,6 +932,10 @@ export class Engine {
             lastScenarioEntryId: nextEntry.id,
             lastTimestamp: this.time,
         })
+
+        if (nextEntry.type === ScenarioEntryType.SELLER_ADMIT) {
+            this.approveProduct(productId, product.moderatorId)
+        }
 
         if (nextEntry.type !== ScenarioEntryType.SELLER_IGNORE) {
             this.createChatMessage(productId, product.sellerId, nextEntry.text)
@@ -904,24 +951,40 @@ export class Engine {
     }
 
     private initializeScenarioEntryRecursive(
-        dispute: ProductDispute,
+        dispute: ProductScenarioEntry,
         productId: string,
         parentId: string | null
     ) {
         const scenarioEntry = this.scenarioEntryTable.createScenarioEntry({
-            type: dispute.type,
+            ...dispute,
             productId: productId,
             parentId: parentId,
-            text: dispute.text,
         })
-        if (dispute.children.length > 0) {
-            for (const child of dispute.children) {
+
+        switch (dispute.type) {
+            case ScenarioEntryType.SELLER_DEFEND:
+                if (dispute.defend) {
+                    this.initializeScenarioEntryRecursive(
+                        dispute.defend,
+                        productId,
+                        scenarioEntry.id
+                    )
+                }
+                if (dispute.admit) {
+                    this.initializeScenarioEntryRecursive(
+                        dispute.admit,
+                        productId,
+                        scenarioEntry.id
+                    )
+                }
+                break
+            case ScenarioEntryType.MODERATOR_DEFEND:
                 this.initializeScenarioEntryRecursive(
-                    child,
+                    dispute.reply,
                     productId,
                     scenarioEntry.id
                 )
-            }
+                break
         }
     }
 }

@@ -17,7 +17,7 @@
     }
 
     &--selected {
-        outline: 2px solid #007bff;
+        outline: 2px solid var(--secondary-color);
     }
 }
 

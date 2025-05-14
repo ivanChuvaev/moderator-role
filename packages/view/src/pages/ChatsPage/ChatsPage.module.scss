@@ -6,9 +6,23 @@
 }
 
 .sidebar {
-    width: 300px;
+    box-sizing: border-box;
+    width: 350px;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    padding: 0;
+}
+
+.chats {
+    flex-grow: 1;
+    height: 0;
+    overflow: auto;
+    padding: 20px;
+
+    & > * {
+        flex-shrink: 0;
+    }
 }
 
 .content {

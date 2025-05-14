@@ -4,23 +4,37 @@ import { Button } from '../Button'
 import { useGameData } from '@view/hooks/useGameData'
 import { FC } from 'react'
 import { game } from '@view/game'
+import { useNavigate } from 'react-router-dom'
 
 export const GameResultModal: FC = ({}) => {
+    const navigate = useNavigate()
     const isEnd = useGameData((engine) => engine.getIsEnd())
-
-    const isWinner = true
-    const score = 100
+    const statistics = useGameData((engine) => engine.getGameStatistics())
 
     const onRestart = () => {
+        navigate('/products')
         game.restart()
     }
+
+    const statisticsNode = (
+        <div className={styles.statistics}>
+            <div>Принято: </div>
+            <div>{statistics.approvedCount}</div>
+            <div>Отклонено: </div>
+            <div>{statistics.rejectedCount}</div>
+            <div>На рассмотрении: </div>
+            <div>{statistics.disputedCount}</div>
+            <div>Неправильно: </div>
+            <div>{statistics.wrongCount}</div>
+        </div>
+    )
 
     return (
         <Dialog.Root open={isEnd}>
             <Dialog.Portal>
                 <Dialog.Backdrop className={styles.backdrop} />
                 <Dialog.Popup className={styles.popup}>
-                    {isWinner ? (
+                    {statistics.isWinner ? (
                         <>
                             <Dialog.Title className={styles.title}>
                                 Поздравляем!
@@ -29,9 +43,7 @@ export const GameResultModal: FC = ({}) => {
                                 <p className={styles.message}>
                                     Вы успешно завершили игру!
                                 </p>
-                                <div className={styles.score}>
-                                    Ваш счет: <span>{score}</span>
-                                </div>
+                                {statisticsNode}
                                 <div className={styles.fireworks}>🎉</div>
                             </div>
                         </>
@@ -47,6 +59,7 @@ export const GameResultModal: FC = ({}) => {
                                 <p className={styles.encouragement}>
                                     Но не расстраивайтесь! Попробуйте еще раз!
                                 </p>
+                                {statisticsNode}
                                 <div className={styles.sadFace}>😢</div>
                             </div>
                         </>
@@ -59,9 +72,6 @@ export const GameResultModal: FC = ({}) => {
                         >
                             Играть снова
                         </Button>
-                        <Dialog.Close>
-                            <Button>Закрыть</Button>
-                        </Dialog.Close>
                     </div>
                 </Dialog.Popup>
             </Dialog.Portal>

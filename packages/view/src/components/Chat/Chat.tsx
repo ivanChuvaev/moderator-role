@@ -28,6 +28,11 @@ export const Chat: FC<ChatProps> = ({ productId }) => {
         [authorizationStorage]
     )
 
+    const currentScenarioEntry = useGameData(
+        (engine) => engine.getProductCurrentScenarioEntry(productId),
+        [productId]
+    )
+
     const answerScenarioEntries = useGameData(
         (engine) => engine.getProductCurrentScenarioEntryChildren(productId),
         [productId]
@@ -59,6 +64,26 @@ export const Chat: FC<ChatProps> = ({ productId }) => {
     const canAdmit = Boolean(product && admin && admitScenarioEntry)
     const canDefend = Boolean(product && admin && defendScenarioEntry)
 
+    const messages = useGameData(
+        (engine) => engine.getProductMessages(productId),
+        [productId]
+    )
+
+    const bottomStatus = useMemo(() => {
+        if (!currentScenarioEntry) return null
+
+        switch (currentScenarioEntry.type) {
+            case ScenarioEntryType.SELLER_IGNORE:
+                return 'Продавец вас игнорирует'
+            case ScenarioEntryType.SELLER_ADMIT:
+                return 'Продавец признал ошибку'
+            case ScenarioEntryType.MODERATOR_ADMIT:
+                return 'Модератор признал ошибку'
+        }
+
+        return null
+    }, [currentScenarioEntry])
+
     const defend = () => {
         if (!product || !admin || !defendScenarioEntry) return undefined
         return continueDisputeByModerator(
@@ -76,11 +101,6 @@ export const Chat: FC<ChatProps> = ({ productId }) => {
             admitScenarioEntry.id
         )
     }
-
-    const messages = useGameData((engine) =>
-        engine.getProductMessages(productId),
-        [productId]
-    )
 
     if (!product) {
         return (
@@ -120,36 +140,49 @@ export const Chat: FC<ChatProps> = ({ productId }) => {
                 <p>Категория: {product.category}</p>
                 <p>Цена: ${product.price}</p>
             </Paper>
-            <Paper className={styles.messages}>
+            <Paper className={styles['chat-content']}>
                 {messages.length > 0 ? (
-                    messages.map((message) => (
-                        <div
-                            key={message.id}
-                            className={cn(styles.message, {
-                                [styles['message--seller']]:
-                                    message.person.id === product.seller.id,
-                            })}
-                        >
-                            <div className={styles['message-meta']}>
-                                <span
-                                    className={styles['message-meta__sender']}
-                                >
-                                    {message.person.firstName}
-                                    &nbsp;
-                                    {message.person.lastName}
-                                </span>
-                                <span className={styles['message-meta__date']}>
-                                    {new Date(message.date).toLocaleString()}
-                                </span>
+                    <div className={styles['chat-content-messages']}>
+                        {messages.map((message) => (
+                            <div
+                                key={message.id}
+                                className={cn(styles.message, {
+                                    [styles['message--seller']]:
+                                        message.person.id === product.seller.id,
+                                })}
+                            >
+                                <div className={styles['message-meta']}>
+                                    <span
+                                        className={
+                                            styles['message-meta__sender']
+                                        }
+                                    >
+                                        {message.person.firstName}
+                                        &nbsp;
+                                        {message.person.lastName}
+                                    </span>
+                                    <span
+                                        className={styles['message-meta__date']}
+                                    >
+                                        {new Date(
+                                            message.date
+                                        ).toLocaleString()}
+                                    </span>
+                                </div>
+                                <div className={styles['message-text']}>
+                                    {message.text}
+                                </div>
                             </div>
-                            <div className={styles['message-text']}>
-                                {message.text}
-                            </div>
-                        </div>
-                    ))
+                        ))}
+                    </div>
                 ) : (
-                    <div className={styles['no-messages']}>
+                    <div className={styles['chat-content-empty-message']}>
                         Нет сообщений в этом чате
+                    </div>
+                )}
+                {bottomStatus && (
+                    <div className={styles['chat-content-status']}>
+                        {bottomStatus}
                     </div>
                 )}
             </Paper>

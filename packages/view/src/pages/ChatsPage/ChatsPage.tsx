@@ -13,7 +13,10 @@ export const ChatsPage = () => {
             <PageLayout fullHeight>
                 <div className={styles['chats-page']}>
                     <Paper className={styles.sidebar}>
-                        <ChatsList selectedProductId={productId} />
+                        <ChatsList
+                            selectedProductId={productId}
+                            className={styles.chats}
+                        />
                     </Paper>
                     <div className={styles.content}>
                         <Outlet />

@@ -16,7 +16,11 @@
 
         &:hover {
             --button-text-color: var(--text-primary-inverted-color);
-            --button-background-color: var(--primary-color);
+            --button-background-color: color-mix(
+                in srgb,
+                var(--primary-color),
+                var(--hover-color) var(--hover-factor)
+            );
         }
     }
 
@@ -26,7 +30,11 @@
 
         &:hover {
             --button-text-color: var(--text-primary-color);
-            --button-background-color: var(--secondary-color);
+            --button-background-color: color-mix(
+                in srgb,
+                var(--secondary-color),
+                var(--hover-color) var(--hover-factor)
+            );
         }
     }
 

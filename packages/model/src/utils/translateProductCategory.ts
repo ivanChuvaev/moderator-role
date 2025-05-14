@@ -7,7 +7,7 @@ export const translateProductCategory = (category: ProductCategory) => {
         case ProductCategory.LAPTOP:
             return 'Ноутбук'
         case ProductCategory.MICROWAVE:
-            return 'Микроволновка'
+            return 'Микроволновая печь'
         case ProductCategory.FAN_HEATER:
             return 'Фен'
         default:

@@ -43,14 +43,13 @@ export const ProductCard: FC<ProductCardProps> = (props) => {
                 <div className={styles['info__seller']}>
                     {product.seller.firstName} {product.seller.lastName}
                 </div>
-                <div className={styles['info__actions']}>
-                    {product.hasMessages && (
+                {product.hasMessages && (
+                    <div className={styles['info__actions']}>
                         <Link to={`/chats/${product.id}`}>
                             <Button>Чат</Button>
                         </Link>
-                    )}
-                    <Button variant="secondary">Отложить</Button>
-                </div>
+                    </div>
+                )}
             </div>
         </Paper>
     )

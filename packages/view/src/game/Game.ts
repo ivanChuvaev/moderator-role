@@ -16,6 +16,7 @@ export class Game {
 
     restart() {
         this.initialize()
+        this.stop()
         this.start()
     }
 
