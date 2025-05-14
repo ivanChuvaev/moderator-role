@@ -4,10 +4,18 @@ import { Link } from 'react-router-dom'
 import styles from './GlobalHeader.module.scss'
 import { Container } from '@view/ui/Container'
 import { useGameData } from '@view/hooks/useGameData'
+import { Button } from '@view/components/Button'
+import { useAuthorizationStorage } from '@view/storageModule/useAuthorizationStorage'
 
 export const GlobalHeader: FC = () => {
     const time = useGameData((engine) => engine.getTime())
     const maxTime = useGameData((engine) => engine.getMaxTime())
+
+    const [, setAuthorizationStorage] = useAuthorizationStorage()
+
+    const handleLogout = () => {
+        setAuthorizationStorage(null)
+    }
 
     return (
         <Container
@@ -16,7 +24,9 @@ export const GlobalHeader: FC = () => {
         >
             <div>Moderator role game</div>
             <div className={styles['right-side']}>
-                <span>{time}/{maxTime}</span>
+                <span>
+                    {time}/{maxTime}
+                </span>
                 <nav className={styles.header_nav}>
                     <ul>
                         <Link to="/moderators">
@@ -30,6 +40,9 @@ export const GlobalHeader: FC = () => {
                         </Link>
                     </ul>
                 </nav>
+                <Button variant="secondary" onClick={handleLogout}>
+                    Выйти
+                </Button>
             </div>
         </Container>
     )

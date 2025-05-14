@@ -23,9 +23,9 @@ export class StorageSynchronizer<T> {
     set(value: T) {
         const event = new StorageEvent(STORAGE_EVENT_KEY, { key: this.key })
 
-        window.dispatchEvent(event)
-
         localStorage.setItem(this.key, JSON.stringify(value))
+
+        window.dispatchEvent(event)
     }
 
     clear() {

@@ -5,7 +5,11 @@ import styles from './LoginForm.module.scss'
 import { Button } from '../Button'
 import { useNavigate } from 'react-router-dom'
 import { FC, useState } from 'react'
-import { useAuthorizationStorage } from '@view/storageModule'
+import {
+    useAuthorizationStorage,
+    useRegistrationStorage,
+} from '@view/storageModule'
+import { game } from '@view/game'
 
 type LoginFormProps = {
     className?: string
@@ -15,6 +19,7 @@ export const LoginForm: FC<LoginFormProps> = (props) => {
     const { className } = props
     const navigate = useNavigate()
 
+    const [registrationStore] = useRegistrationStorage()
     const [, setAuthorizationStorage] = useAuthorizationStorage()
 
     const [errors, setErrors] = useState<{
@@ -40,12 +45,28 @@ export const LoginForm: FC<LoginFormProps> = (props) => {
             return
         }
 
+        if (!registrationStore || !(values.login in registrationStore)) {
+            setErrors({
+                login: 'Пользователь не зарегистрирован',
+            })
+            return
+        }
+
+        if (registrationStore[values.login].password !== values.password) {
+            setErrors({
+                password: 'Неверный пароль',
+            })
+            return
+        }
+
         setAuthorizationStorage({
             login: values.login,
             password: values.password,
         })
 
-        navigate('/')
+        game.restart()
+
+        navigate('/products')
     }
 
     return (
