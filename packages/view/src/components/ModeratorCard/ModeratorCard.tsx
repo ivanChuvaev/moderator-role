@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 
 import { Avatar } from '../Avatar'
 import { Button } from '../Button'
@@ -15,6 +15,12 @@ type ModeratorCardProps = {
 
 export const ModeratorCard: React.FC<ModeratorCardProps> = (props) => {
     const { person } = props
+
+    const deletePerson = useGameData((engine) => engine.deletePerson)
+
+    const handleFireModerator = useCallback(() => {
+        deletePerson(person.id)
+    }, [deletePerson, person.id])
 
     const statistics = useGameData((engine) =>
         engine.getModeratorStatistics(person.id)
@@ -61,6 +67,7 @@ export const ModeratorCard: React.FC<ModeratorCardProps> = (props) => {
                                 <Button
                                     className={styles.fire_button}
                                     variant="danger"
+                                    onClick={handleFireModerator}
                                 >
                                     Уволить
                                 </Button>

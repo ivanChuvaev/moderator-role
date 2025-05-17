@@ -11,6 +11,10 @@ export class SellerTable {
         this.sellers.set(seller.personId, seller)
     }
 
+    deleteSeller(personId: string) {
+        this.sellers.delete(personId)
+    }
+
     getSeller(personId: string) {
         return this.sellers.get(personId)
     }

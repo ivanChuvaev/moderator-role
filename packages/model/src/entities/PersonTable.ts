@@ -19,6 +19,10 @@ export class PersonTable {
         return newPerson
     }
 
+    deletePerson(id: string) {
+        this.persons.delete(id)
+    }
+
     getPersons(): Person[] {
         return Array.from(this.persons.values())
     }

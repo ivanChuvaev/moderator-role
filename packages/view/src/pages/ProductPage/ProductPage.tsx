@@ -12,6 +12,7 @@ import { ProductCharacteristics } from './ProductCharacteristics'
 import { useAuthorizationStorage } from '@view/storageModule'
 import { ProductStatus } from '@model/index'
 import { Paper } from '@view/ui/Paper'
+import { ProductCategoryRestrictions } from '@view/components/ProductCategoryRestrictions'
 
 interface ProductPageProps {
     productId?: number
@@ -71,6 +72,8 @@ export const ProductPage: FC<ProductPageProps> = () => {
                             <Button onClick={handleApprove}>Принять</Button>
                         </Paper>
                     )}
+
+                    <ProductCategoryRestrictions category={product.category} />
                 </div>
             </PageLayout>
         </Protected>

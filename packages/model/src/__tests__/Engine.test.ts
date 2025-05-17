@@ -95,7 +95,17 @@ describe('Engine', () => {
                 dispute: {
                     type: ScenarioEntryType.SELLER_DEFEND,
                     text: 'Initial dispute',
-                    children: [],
+                    admit: {
+                        type: ScenarioEntryType.MODERATOR_ADMIT,
+                        text: 'Moderator admit',
+                    },
+                    defend: {
+                        type: ScenarioEntryType.MODERATOR_DEFEND,
+                        text: 'Moderator defend',
+                        reply: {
+                            type: ScenarioEntryType.SELLER_IGNORE,
+                        },
+                    },
                 },
             })
 
@@ -135,7 +145,17 @@ describe('Engine', () => {
                 dispute: {
                     type: ScenarioEntryType.SELLER_DEFEND,
                     text: 'Initial dispute',
-                    children: [],
+                    admit: {
+                        type: ScenarioEntryType.MODERATOR_ADMIT,
+                        text: 'Moderator admit',
+                    },
+                    defend: {
+                        type: ScenarioEntryType.MODERATOR_DEFEND,
+                        text: 'Moderator defend',
+                        reply: {
+                            type: ScenarioEntryType.SELLER_IGNORE,
+                        },
+                    },
                 },
             })
 
@@ -173,7 +193,17 @@ describe('Engine', () => {
                 dispute: {
                     type: ScenarioEntryType.SELLER_DEFEND,
                     text: 'Initial dispute',
-                    children: [],
+                    admit: {
+                        type: ScenarioEntryType.MODERATOR_ADMIT,
+                        text: 'Moderator admit',
+                    },
+                    defend: {
+                        type: ScenarioEntryType.MODERATOR_DEFEND,
+                        text: 'Moderator defend',
+                        reply: {
+                            type: ScenarioEntryType.SELLER_IGNORE,
+                        },
+                    },
                 },
             })
 
@@ -251,7 +281,17 @@ describe('Engine', () => {
                 dispute: {
                     type: ScenarioEntryType.SELLER_DEFEND,
                     text: 'Initial dispute',
-                    children: [],
+                    admit: {
+                        type: ScenarioEntryType.MODERATOR_ADMIT,
+                        text: 'Moderator admit',
+                    },
+                    defend: {
+                        type: ScenarioEntryType.MODERATOR_DEFEND,
+                        text: 'Moderator defend',
+                        reply: {
+                            type: ScenarioEntryType.SELLER_IGNORE,
+                        },
+                    },
                 },
             })
 
@@ -312,7 +352,17 @@ describe('Engine', () => {
                 dispute: {
                     type: ScenarioEntryType.SELLER_DEFEND,
                     text: 'Initial dispute',
-                    children: [],
+                    admit: {
+                        type: ScenarioEntryType.MODERATOR_ADMIT,
+                        text: 'Moderator admit',
+                    },
+                    defend: {
+                        type: ScenarioEntryType.MODERATOR_DEFEND,
+                        text: 'Moderator defend',
+                        reply: {
+                            type: ScenarioEntryType.SELLER_IGNORE,
+                        },
+                    },
                 },
             })
         })
@@ -370,7 +420,17 @@ describe('Engine', () => {
                 dispute: {
                     type: ScenarioEntryType.SELLER_DEFEND,
                     text: 'Initial dispute',
-                    children: [],
+                    admit: {
+                        type: ScenarioEntryType.MODERATOR_ADMIT,
+                        text: 'Moderator admit',
+                    },
+                    defend: {
+                        type: ScenarioEntryType.MODERATOR_DEFEND,
+                        text: 'Moderator defend',
+                        reply: {
+                            type: ScenarioEntryType.SELLER_IGNORE,
+                        },
+                    },
                 },
             })
 
@@ -437,41 +497,30 @@ describe('Engine', () => {
                 dispute: {
                     type: ScenarioEntryType.SELLER_DEFEND,
                     text: 'Initial dispute',
-                    children: [
-                        {
-                            type: ScenarioEntryType.MODERATOR_ADMIT,
-                            text: 'Moderator admit',
-                            children: [],
-                        },
-                        {
-                            type: ScenarioEntryType.MODERATOR_DEFEND,
-                            text: 'Moderator defend',
-                            children: [
-                                {
-                                    type: ScenarioEntryType.SELLER_DEFEND,
-                                    text: 'Seller defend',
-                                    children: [
-                                        {
-                                            type: ScenarioEntryType.MODERATOR_ADMIT,
-                                            text: 'Moderator admit nested',
-                                            children: [],
-                                        },
-                                        {
-                                            type: ScenarioEntryType.MODERATOR_DEFEND,
-                                            text: 'Moderator defend nested',
-                                            children: [
-                                                {
-                                                    type: ScenarioEntryType.SELLER_ADMIT,
-                                                    text: 'Seller admit nested',
-                                                    children: [],
-                                                },
-                                            ],
-                                        },
-                                    ],
+                    admit: {
+                        type: ScenarioEntryType.MODERATOR_ADMIT,
+                        text: 'Moderator admit',
+                    },
+                    defend: {
+                        type: ScenarioEntryType.MODERATOR_DEFEND,
+                        text: 'Moderator defend',
+                        reply: {
+                            type: ScenarioEntryType.SELLER_DEFEND,
+                            text: 'Seller defend',
+                            admit: {
+                                type: ScenarioEntryType.MODERATOR_ADMIT,
+                                text: 'Moderator admit nested',
+                            },
+                            defend: {
+                                type: ScenarioEntryType.MODERATOR_DEFEND,
+                                text: 'Moderator defend nested',
+                                reply: {
+                                    type: ScenarioEntryType.SELLER_ADMIT,
+                                    text: 'Seller admit nested',
                                 },
-                            ],
+                            },
                         },
-                    ],
+                    },
                 },
             })
         })
@@ -491,12 +540,21 @@ describe('Engine', () => {
                 engine.getProductCurrentScenarioEntryChildren(laptop.id)
 
             expect(scenarioEntries.length).toBe(2)
-            expect(scenarioEntries[0].type).toBe(
-                ScenarioEntryType.MODERATOR_ADMIT
-            )
-            expect(scenarioEntries[1].type).toBe(
-                ScenarioEntryType.MODERATOR_DEFEND
-            )
+
+            if (scenarioEntries[0].type !== ScenarioEntryType.MODERATOR_ADMIT) {
+                throw new Error(
+                    'First scenario entry should be moderator admit'
+                )
+            }
+
+            if (
+                scenarioEntries[1].type !== ScenarioEntryType.MODERATOR_DEFEND
+            ) {
+                throw new Error(
+                    'Second scenario entry should be moderator defend'
+                )
+            }
+
             expect(scenarioEntries[0].text).toBe('Moderator admit')
             expect(scenarioEntries[1].text).toBe('Moderator defend')
         })
@@ -508,6 +566,12 @@ describe('Engine', () => {
             const scenarioEntries =
                 engine.getProductCurrentScenarioEntryChildren(laptop.id)
 
+            if (scenarioEntries[0].type !== ScenarioEntryType.MODERATOR_ADMIT) {
+                throw new Error(
+                    'First scenario entry should be moderator admit'
+                )
+            }
+
             engine.continueDisputeByModerator(
                 laptop.id,
                 admin.id,
@@ -515,6 +579,7 @@ describe('Engine', () => {
             )
 
             const messages = engine.getProductMessages(laptop.id)
+
             expect(messages.length).toBe(2)
             expect(messages[0].text).toBe('Initial dispute')
             expect(messages[1].text).toBe(scenarioEntries[0].text)
@@ -528,10 +593,22 @@ describe('Engine', () => {
                 laptop.id
             )
 
-            expect(scenarioEntries.length).toBe(2)
+            if (scenarioEntries[0].type !== ScenarioEntryType.MODERATOR_ADMIT) {
+                throw new Error(
+                    'First scenario entry should be moderator admit'
+                )
+            }
+
+            if (
+                scenarioEntries[1].type !== ScenarioEntryType.MODERATOR_DEFEND
+            ) {
+                throw new Error(
+                    'Second scenario entry should be moderator defend'
+                )
+            }
+
             expect(scenarioEntries[0].text).toBe('Moderator admit')
             expect(scenarioEntries[1].text).toBe('Moderator defend')
-
             engine.continueDisputeByModerator(
                 laptop.id,
                 admin.id,
@@ -543,6 +620,11 @@ describe('Engine', () => {
             )
 
             expect(scenarioEntries.length).toBe(1)
+
+            if (scenarioEntries[0].type !== ScenarioEntryType.SELLER_DEFEND) {
+                throw new Error('First scenario entry should be seller defend')
+            }
+
             expect(scenarioEntries[0].text).toBe('Seller defend')
 
             engine.tick()
@@ -552,8 +634,20 @@ describe('Engine', () => {
             )
 
             expect(scenarioEntries.length).toBe(2)
-            expect(scenarioEntries[0].text).toBe('Moderator admit nested')
-            expect(scenarioEntries[1].text).toBe('Moderator defend nested')
+
+            if (scenarioEntries[0].type !== ScenarioEntryType.MODERATOR_ADMIT) {
+                throw new Error(
+                    'First scenario entry should be moderator admit'
+                )
+            }
+
+            if (
+                scenarioEntries[1].type !== ScenarioEntryType.MODERATOR_DEFEND
+            ) {
+                throw new Error(
+                    'Second scenario entry should be moderator defend'
+                )
+            }
         })
         it('Dispute should be ended with seller admit after 3 ticks', () => {
             engine.rejectProduct(laptop.id, admin.id)
@@ -577,8 +671,20 @@ describe('Engine', () => {
             )
 
             expect(scenarioEntries.length).toBe(2)
-            expect(scenarioEntries[0].text).toBe('Moderator admit nested')
-            expect(scenarioEntries[1].text).toBe('Moderator defend nested')
+
+            if (scenarioEntries[0].type !== ScenarioEntryType.MODERATOR_ADMIT) {
+                throw new Error(
+                    'First scenario entry should be moderator admit'
+                )
+            }
+
+            if (
+                scenarioEntries[1].type !== ScenarioEntryType.MODERATOR_DEFEND
+            ) {
+                throw new Error(
+                    'Second scenario entry should be moderator defend'
+                )
+            }
 
             engine.continueDisputeByModerator(
                 laptop.id,
@@ -658,9 +764,19 @@ describe('Engine', () => {
                 ram: 4,
                 power: 100,
                 dispute: {
-                    type: ScenarioEntryType.SELLER_ADMIT,
+                    type: ScenarioEntryType.SELLER_DEFEND,
                     text: 'Initial dispute',
-                    children: [],
+                    admit: {
+                        type: ScenarioEntryType.MODERATOR_ADMIT,
+                        text: 'Moderator admit',
+                    },
+                    defend: {
+                        type: ScenarioEntryType.MODERATOR_DEFEND,
+                        text: 'Moderator defend',
+                        reply: {
+                            type: ScenarioEntryType.SELLER_IGNORE,
+                        },
+                    },
                 },
             })
             refrigerator = engine.createProduct({
@@ -674,9 +790,19 @@ describe('Engine', () => {
                 volume: 101,
                 depth: 60,
                 dispute: {
-                    type: ScenarioEntryType.SELLER_ADMIT,
+                    type: ScenarioEntryType.SELLER_DEFEND,
                     text: 'Initial dispute',
-                    children: [],
+                    admit: {
+                        type: ScenarioEntryType.MODERATOR_ADMIT,
+                        text: 'Moderator admit',
+                    },
+                    defend: {
+                        type: ScenarioEntryType.MODERATOR_DEFEND,
+                        text: 'Moderator defend',
+                        reply: {
+                            type: ScenarioEntryType.SELLER_IGNORE,
+                        },
+                    },
                 },
             })
         })

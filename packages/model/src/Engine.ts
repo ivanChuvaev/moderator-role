@@ -114,6 +114,7 @@ export class Engine {
         this.createChatMessage = this.createChatMessage.bind(this)
         this.initializeScenarioEntryRecursive =
             this.initializeScenarioEntryRecursive.bind(this)
+        this.deletePerson = this.deletePerson.bind(this)
     }
 
     reset() {
@@ -254,6 +255,14 @@ export class Engine {
         this.notifySubscribers()
 
         return this.getFullPerson(createdPerson.id) as FullPerson
+    }
+
+    deletePerson(personId: string) {
+        this.personTable.deletePerson(personId)
+        this.adminTable.deleteAdmin(personId)
+        this.moderatorTable.deleteModerator(personId)
+        this.sellerTable.deleteSeller(personId)
+        this.notifySubscribers()
     }
 
     approveProduct(productId: string, moderatorId: string) {

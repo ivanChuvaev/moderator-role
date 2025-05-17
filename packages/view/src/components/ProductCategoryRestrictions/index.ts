@@ -1,0 +1,1 @@
+export { ProductCategoryRestrictions } from './ProductCategoryRestrictions'

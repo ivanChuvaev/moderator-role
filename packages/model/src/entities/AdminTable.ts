@@ -11,6 +11,10 @@ export class AdminTable {
         this.admins.set(admin.personId, admin)
     }
 
+    deleteAdmin(personId: string) {
+        this.admins.delete(personId)
+    }
+
     getAdmin(personId: string) {
         return this.admins.get(personId)
     }
