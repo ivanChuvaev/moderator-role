@@ -1,6 +1,6 @@
 import { FanHeater } from '../types/FanHeater'
 
-const fanHeaterRestrictions: Partial<Record<keyof FanHeater, any>> = {
+export const fanHeaterRestrictions: Partial<Record<keyof FanHeater, any>> = {
     area: {
         min: 5,
         max: 15,

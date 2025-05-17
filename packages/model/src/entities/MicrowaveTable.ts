@@ -1,6 +1,6 @@
 import { Microwave } from '../types/Microwave'
 
-const microwaveRestrictions: Partial<Record<keyof Microwave, any>> = {
+export const microwaveRestrictions: Partial<Record<keyof Microwave, any>> = {
     volume: {
         min: 20,
         max: 30,

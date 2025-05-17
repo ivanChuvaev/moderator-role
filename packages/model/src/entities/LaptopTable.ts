@@ -1,6 +1,6 @@
 import { Laptop } from '../types/Laptop'
 
-const laptopRestrictions: Partial<Record<keyof Laptop, any>> = {
+export const laptopRestrictions: Partial<Record<keyof Laptop, any>> = {
     diagonal: {
         min: 13,
         max: 17,

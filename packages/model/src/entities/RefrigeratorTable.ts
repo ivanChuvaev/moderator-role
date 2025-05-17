@@ -1,6 +1,6 @@
 import { Refrigerator } from '../types/Refrigerator'
 
-const refrigeratorRestrictions: Partial<Record<keyof Refrigerator, any>> = {
+export const refrigeratorRestrictions: Partial<Record<keyof Refrigerator, any>> = {
     width: {
         min: 50,
         max: 70,

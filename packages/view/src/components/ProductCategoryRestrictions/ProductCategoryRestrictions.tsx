@@ -1,4 +1,8 @@
-import { ProductCategory, translateProductCategory } from '@model'
+import {
+    getRestrictionsByCategory,
+    ProductCategory,
+    translateProductCategory,
+} from '@model'
 
 type ProductCategoryRestrictionsProps = {
     category: ProductCategory
@@ -7,5 +11,13 @@ type ProductCategoryRestrictionsProps = {
 export const ProductCategoryRestrictions = ({
     category,
 }: ProductCategoryRestrictionsProps) => {
-    return <div>Restrictions for {translateProductCategory(category)}</div>
+    const restrictions = getRestrictionsByCategory(category)
+    return (
+        <div>
+            Restrictions for {translateProductCategory(category)}
+            <div style={{ whiteSpace: 'pre-wrap' }}>
+                {JSON.stringify(restrictions, null, 2)}
+            </div>
+        </div>
+    )
 }
