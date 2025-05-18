@@ -1,13 +1,14 @@
 import { FC } from 'react'
 
 import styles from './GlobalFooter.module.scss'
+import { Container } from '@view/ui/Container'
 
 export const GlobalFooter: FC = () => {
     return (
         <footer className={styles.footer}>
-            <div className={styles.footer_container}>
-                <div className={styles.footer_logo}>Лого</div>
-                <nav className={styles.footer_nav}>
+            <Container classNameContent={styles.content}>
+                <div className={styles.logo}>Лого</div>
+                <nav className={styles.navigation}>
                     <ul>
                         <li>
                             <a href="#">Главная</a>
@@ -23,10 +24,10 @@ export const GlobalFooter: FC = () => {
                         </li>
                     </ul>
                 </nav>
-                <div className={styles.footer_copyright}>
+                <div className={styles.copyright}>
                     &copy; 2025 Моя Компания. Все права защищены.
                 </div>
-            </div>
+            </Container>
         </footer>
     )
 }
