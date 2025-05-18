@@ -10,8 +10,13 @@ import { useAuthorizationStorage } from '@view/storageModule/useAuthorizationSto
 export const GlobalHeader: FC = () => {
     const time = useGameData((engine) => engine.getTime())
     const maxTime = useGameData((engine) => engine.getMaxTime())
+    const stopGame = useGameData((engine) => engine.stop)
 
     const [, setAuthorizationStorage] = useAuthorizationStorage()
+
+    const handleEnd = () => {
+        stopGame()
+    }
 
     const handleLogout = () => {
         setAuthorizationStorage(null)
@@ -24,6 +29,9 @@ export const GlobalHeader: FC = () => {
         >
             <div>Moderator role game</div>
             <div className={styles['right-side']}>
+                <Button variant="secondary" onClick={handleEnd}>
+                    Завершить
+                </Button>
                 <span>
                     {time}/{maxTime}
                 </span>

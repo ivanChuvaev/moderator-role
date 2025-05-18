@@ -115,6 +115,7 @@ export class Engine {
         this.initializeScenarioEntryRecursive =
             this.initializeScenarioEntryRecursive.bind(this)
         this.deletePerson = this.deletePerson.bind(this)
+        this.stop = this.stop.bind(this)
     }
 
     reset() {
@@ -177,6 +178,11 @@ export class Engine {
 
         this.time += 1
 
+        this.notifySubscribers()
+    }
+
+    stop() {
+        this.end = true
         this.notifySubscribers()
     }
 
