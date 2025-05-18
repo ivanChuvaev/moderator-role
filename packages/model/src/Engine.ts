@@ -171,11 +171,11 @@ export class Engine {
             )
         })
 
-        this.time += 1
-
         if (this.time >= this.maxTime || allProductsAreApprovedOrRejected) {
             this.end = true
         }
+
+        this.time += 1
 
         this.notifySubscribers()
     }

@@ -37,6 +37,7 @@ describe('Engine', () => {
             expect(seller.sex).toBe(Sex.MALE)
             expect(seller.disputeFactor).toBe(0.5)
         })
+
         it('Should create a moderator', () => {
             const moderator = engine.createPerson({
                 type: PersonType.MODERATOR,
@@ -65,6 +66,45 @@ describe('Engine', () => {
             expect(moderator.employmentDate).toBe(
                 new Date('2020-01-01').getTime()
             )
+        })
+    })
+
+    describe('Delete person', () => {
+        let seller: ReturnType<typeof engine.createPerson>
+        let moderator: ReturnType<typeof engine.createPerson>
+
+        beforeEach(() => {
+            seller = engine.createPerson({
+                type: PersonType.SELLER,
+                firstName: 'John',
+                lastName: 'Doe',
+                middleName: 'Michael',
+                sex: Sex.MALE,
+                disputeFactor: 0.5,
+                avatarSrc: 'default-avatar.png',
+            })
+            moderator = engine.createPerson({
+                type: PersonType.MODERATOR,
+                firstName: 'Jane',
+                lastName: 'Smith',
+                middleName: 'Marie',
+                sex: Sex.FEMALE,
+                salary: 50000,
+                birthdate: new Date('1990-01-01').getTime(),
+                employmentDate: new Date('2020-01-01').getTime(),
+                correctFactor: 0.8,
+                avatarSrc: 'moderator.jpg',
+            })
+        })
+
+        it('Should remove a seller', () => {
+            engine.deletePerson(seller.id)
+            expect(engine.getFullPerson(seller.id)).toBeUndefined()
+        })
+
+        it('Should remove a moderator', () => {
+            engine.deletePerson(moderator.id)
+            expect(engine.getFullPerson(moderator.id)).toBeUndefined()
         })
     })
 
@@ -121,6 +161,7 @@ describe('Engine', () => {
             expect(products.length).toBe(1)
             expect(products[0]).toStrictEqual(laptop)
         })
+
         it('Should create a refrigerator product', () => {
             const seller = engine.createPerson({
                 type: PersonType.SELLER,
@@ -166,6 +207,7 @@ describe('Engine', () => {
             expect(refrigerator.sellerId).toBe(seller.id)
             expect(refrigerator.status).toBe(ProductStatus.PENDING)
         })
+
         it('Should create a microwave product', () => {
             const seller = engine.createPerson({
                 type: PersonType.SELLER,
@@ -217,24 +259,55 @@ describe('Engine', () => {
     })
 
     describe('Tick', () => {
+        beforeEach(() => {
+            engine = new Engine(10)
+            const seller = engine.createPerson({
+                type: PersonType.SELLER,
+                firstName: 'John',
+                lastName: 'Doe',
+                middleName: 'Michael',
+                sex: Sex.MALE,
+                disputeFactor: 0.5,
+                avatarSrc: 'default-avatar.png',
+            })
+            engine.createProduct({
+                category: ProductCategory.LAPTOP,
+                name: 'MacBook Pro',
+                price: 1299,
+                sellerId: seller.id,
+                width: 10,
+                height: 10,
+                mass: 10,
+                diagonal: 10,
+                storage: 10,
+                ram: 10,
+                power: 10,
+                dispute: {
+                    type: ScenarioEntryType.SELLER_DEFEND,
+                    text: 'Initial dispute',
+                },
+            })
+        })
+
         it('Should increment time', () => {
-            engine.tick()
-            expect(engine.getTime()).toBe(1)
+            for (let i = 0; i < 10; i++) {
+                engine.tick()
+                expect(engine.getTime()).toBe(i + 1)
+            }
         })
 
         it('Should end after max time', () => {
-            const customEngine = new Engine(10)
             for (let i = 0; i < 11; i++) {
-                customEngine.tick()
+                engine.tick()
             }
-            expect(customEngine.getIsEnd()).toBe(true)
+            expect(engine.getIsEnd()).toBe(true)
         })
+
         it('Should stop incrementing time after end', () => {
-            const customEngine = new Engine(10)
-            for (let i = 0; i < 11; i++) {
-                customEngine.tick()
+            for (let i = 0; i < 20; i++) {
+                engine.tick()
             }
-            expect(customEngine.getTime()).toBe(10)
+            expect(engine.getTime()).toBe(11)
         })
     })
 
@@ -558,6 +631,7 @@ describe('Engine', () => {
             expect(scenarioEntries[0].text).toBe('Moderator admit')
             expect(scenarioEntries[1].text).toBe('Moderator defend')
         })
+
         it('Should have two messages after dispute and admit by moderator', () => {
             engine.rejectProduct(laptop.id, admin.id)
 
@@ -584,6 +658,7 @@ describe('Engine', () => {
             expect(messages[0].text).toBe('Initial dispute')
             expect(messages[1].text).toBe(scenarioEntries[0].text)
         })
+
         it('Should be Moderator admit nested', () => {
             engine.rejectProduct(laptop.id, admin.id)
 
@@ -649,6 +724,7 @@ describe('Engine', () => {
                 )
             }
         })
+
         it('Dispute should be ended with seller admit after 3 ticks', () => {
             engine.rejectProduct(laptop.id, admin.id)
 
@@ -806,10 +882,12 @@ describe('Engine', () => {
                 },
             })
         })
+
         it('Should have two wrong products', () => {
             const wrongCount = engine.getWrongCount()
             expect(wrongCount).toBe(2)
         })
+
         it('Should have one wrong product', () => {
             engine.approveProduct(laptop.id, admin.id)
             engine.approveProduct(refrigerator.id, admin.id)
@@ -818,6 +896,7 @@ describe('Engine', () => {
 
             expect(wrongCount).toBe(1)
         })
+
         it('Should have zero wrong products', () => {
             engine.rejectProduct(laptop.id, admin.id)
             engine.approveProduct(refrigerator.id, admin.id)
