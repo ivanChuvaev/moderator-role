@@ -128,7 +128,11 @@ export const RegisterForm: FC<RegisterFormProps> = (props) => {
             <Field.Root name="firstName" className={styles.field}>
                 <Field.Label className={styles.label}>Имя</Field.Label>
                 <div className={styles['input-wrapper']}>
-                    <Field.Control type="text" className={styles.input} />
+                    <Field.Control
+                        type="text"
+                        className={styles.input}
+                        placeholder="Введите имя"
+                    />
                 </div>
                 <Field.Error className={styles.error} />
             </Field.Root>
@@ -136,7 +140,11 @@ export const RegisterForm: FC<RegisterFormProps> = (props) => {
             <Field.Root name="lastName" className={styles.field}>
                 <Field.Label className={styles.label}>Фамилия</Field.Label>
                 <div className={styles['input-wrapper']}>
-                    <Field.Control type="text" className={styles.input} />
+                    <Field.Control
+                        type="text"
+                        className={styles.input}
+                        placeholder="Введите фамилию"
+                    />
                 </div>
                 <Field.Error className={styles.error} />
             </Field.Root>
@@ -144,7 +152,11 @@ export const RegisterForm: FC<RegisterFormProps> = (props) => {
             <Field.Root name="middleName" className={styles.field}>
                 <Field.Label className={styles.label}>Отчество</Field.Label>
                 <div className={styles['input-wrapper']}>
-                    <Field.Control type="text" className={styles.input} />
+                    <Field.Control
+                        type="text"
+                        className={styles.input}
+                        placeholder="Введите отчество (необязательно)"
+                    />
                 </div>
                 <Field.Error className={styles.error} />
             </Field.Root>

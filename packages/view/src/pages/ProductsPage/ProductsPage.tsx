@@ -1,4 +1,3 @@
-import { Content } from '@view/components/Content/Content'
 import { PageLayout } from '@view/layouts/PageLayout'
 import { Paper } from '@view/ui/Paper'
 
@@ -15,9 +14,7 @@ export const ProductsPage = () => {
                     <Paper className={styles.sidebar}>
                         <ProductFilter className={styles.filter} />
                     </Paper>
-                    <Paper className={styles.content}>
-                        <ProductsList className={styles.products} />
-                    </Paper>
+                    <ProductsList className={styles.products} />
                 </div>
             </PageLayout>
         </Protected>

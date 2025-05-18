@@ -16,7 +16,8 @@ interface LoginPageProps {
 export const LoginPage: FC<LoginPageProps> = () => {
     const [registration, setRegistration] = useRegistrationStorage()
 
-    const hasAccounts = registration !== null
+    const accountsCount =
+        registration !== null ? Object.keys(registration).length : 0
 
     const handleDeleteAllAccounts = () => {
         setRegistration(null)
@@ -38,14 +39,14 @@ export const LoginPage: FC<LoginPageProps> = () => {
                         </Link>
                     </div>
                 </Paper>
-                {hasAccounts && (
+                {accountsCount > 0 && (
                     <Button
                         type="button"
                         variant="secondary"
                         className={styles['delete-all-accounts-button']}
                         onClick={handleDeleteAllAccounts}
                     >
-                        Удалить все аккаунты
+                        Удалить все аккаунты ({accountsCount})
                     </Button>
                 )}
             </div>

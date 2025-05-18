@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 
 import styles from './GlobalHeader.module.scss'
@@ -6,13 +6,17 @@ import { Container } from '@view/ui/Container'
 import { useGameData } from '@view/hooks/useGameData'
 import { Button } from '@view/components/Button'
 import { useAuthorizationStorage } from '@view/storageModule/useAuthorizationStorage'
+import { useGlobalLayout } from './hooks/useGlobalLayout'
 
 export const GlobalHeader: FC = () => {
     const time = useGameData((engine) => engine.getTime())
     const maxTime = useGameData((engine) => engine.getMaxTime())
     const stopGame = useGameData((engine) => engine.stop)
+    const headerRef = useRef<HTMLElement>(null)
 
     const [, setAuthorizationStorage] = useAuthorizationStorage()
+
+    const { setHeaderHeight } = useGlobalLayout()
 
     const handleEnd = () => {
         stopGame()
@@ -22,8 +26,30 @@ export const GlobalHeader: FC = () => {
         setAuthorizationStorage(null)
     }
 
+    useEffect(() => {
+        const header = headerRef.current
+
+        if (!header) {
+            return
+        }
+
+        const handleResize = () => {
+            setHeaderHeight(header.clientHeight)
+        }
+
+        handleResize()
+
+        window.addEventListener('resize', handleResize)
+
+        return () => {
+            window.removeEventListener('resize', handleResize)
+        }
+    }, [headerRef.current])
+
     return (
         <Container
+            as="header"
+            ref={headerRef}
             className={styles['header-container']}
             classNameContent={styles.header}
         >

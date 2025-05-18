@@ -1,14 +1,26 @@
 import { Outlet } from 'react-router-dom'
 import { GlobalHeader } from './GlobalHeader'
 import { GlobalFooter } from './GlobalFooter'
-
+import { GlobalLayoutContext } from './GlobalLayoutContext'
 import styles from './GlobalLayout.module.scss'
 import { GameResultModal } from '@view/components/GameResultModal/GameResultModal'
 import { useAuthorizationStorage } from '@view/storageModule'
-import { ReactNode } from 'react'
+import { CSSProperties, ReactNode, useMemo, useState } from 'react'
 
 export const GlobalLayout = () => {
     const [authorizedStorage] = useAuthorizationStorage()
+    const [headerHeight, setHeaderHeight] = useState(0)
+    const [footerHeight, setFooterHeight] = useState(0)
+
+    const providerValue = useMemo(
+        () => ({
+            headerHeight,
+            footerHeight,
+            setHeaderHeight,
+            setFooterHeight,
+        }),
+        [headerHeight, footerHeight, setHeaderHeight, setFooterHeight]
+    )
 
     let content: ReactNode
 
@@ -25,5 +37,19 @@ export const GlobalLayout = () => {
         content = <Outlet />
     }
 
-    return <div className={styles['global-layout']}>{content}</div>
+    return (
+        <GlobalLayoutContext.Provider value={providerValue}>
+            <div
+                className={styles['global-layout']}
+                style={
+                    {
+                        '--global-layout-header-height': `${headerHeight}px`,
+                        '--global-layout-footer-height': `${footerHeight}px`,
+                    } as CSSProperties
+                }
+            >
+                {content}
+            </div>
+        </GlobalLayoutContext.Provider>
+    )
 }

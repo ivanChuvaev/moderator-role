@@ -16,9 +16,7 @@ export const ModeratorsPage: FC = () => {
                     <Paper className={styles.sidebar}>
                         <ModeratorFilter className={styles.filter} />
                     </Paper>
-                    <Paper className={styles.content}>
-                        <ModeratorsList className={styles['moderator-list']} />
-                    </Paper>
+                    <ModeratorsList className={styles['moderator-list']} />
                 </div>
             </PageLayout>
         </Protected>

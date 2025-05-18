@@ -3,7 +3,7 @@ import { createBrowserRouter, replace, RouterProvider } from 'react-router-dom'
 
 import { ProductPage } from '@view/pages/ProductPage'
 import { ProductsPage } from '@view/pages/ProductsPage'
-import { GlobalLayout } from '@view/layouts/GlobalLayout/GlobalLayout'
+import { GlobalLayout } from '@view/layouts/GlobalLayout'
 import { ModeratorsPage } from '@view/pages/ModeratorsPage'
 import { ChatPage } from '@view/pages/ChatPage'
 import { LoginPage } from '@view/pages/LoginPage'

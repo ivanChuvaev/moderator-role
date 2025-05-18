@@ -29,6 +29,45 @@ export const scenarioA = (engine: Engine) => {
         correctFactor: 0.5,
     })
 
+    engine.createPerson({
+        type: PersonType.MODERATOR,
+        firstName: 'Sarah',
+        lastName: 'Johnson',
+        middleName: 'Elizabeth',
+        sex: Sex.FEMALE,
+        avatarSrc: null,
+        salary: 9500,
+        birthdate: new Date().getTime() - 315360000000 * 2.5,
+        employmentDate: new Date().getTime() - 315360000000 * 0.8,
+        correctFactor: 0.7,
+    })
+
+    engine.createPerson({
+        type: PersonType.MODERATOR,
+        firstName: 'Michael',
+        lastName: 'Chen',
+        middleName: 'Wei',
+        sex: Sex.MALE,
+        avatarSrc: null,
+        salary: 10500,
+        birthdate: new Date().getTime() - 315360000000 * 2.8,
+        employmentDate: new Date().getTime() - 315360000000 * 0.5,
+        correctFactor: 0.6,
+    })
+
+    engine.createPerson({
+        type: PersonType.MODERATOR,
+        firstName: 'Emma',
+        lastName: 'Rodriguez',
+        middleName: 'Maria',
+        sex: Sex.FEMALE,
+        avatarSrc: null,
+        salary: 9800,
+        birthdate: new Date().getTime() - 315360000000 * 2.3,
+        employmentDate: new Date().getTime() - 315360000000 * 0.4,
+        correctFactor: 0.65,
+    })
+
     const adminsFromRegistrationStorage = registrationStorage.get()
 
     if (adminsFromRegistrationStorage) {
