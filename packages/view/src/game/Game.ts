@@ -1,21 +1,41 @@
 import { Engine } from '@model/Engine'
 import { initialize } from './initialize'
+import { isNil } from '@view/utils/isNil'
+
+type ExternalStorage = {
+    getState: () => string | null
+    setState: (state: string | null) => void
+}
 
 export class Game {
     private engine: Engine
     private interval: number
 
-    constructor() {
+    constructor(externalStorage?: ExternalStorage) {
         this.engine = new Engine()
         this.interval = 0
-    }
 
-    initialize() {
+        if (externalStorage) {
+            const externalStorageState = externalStorage?.getState()
+
+            if (isNil(externalStorageState)) {
+                initialize(this.engine)
+            } else {
+                this.engine.parse(externalStorageState)
+            }
+
+            this.engine.subscribe(() => {
+                externalStorage.setState(this.engine.serialize())
+            })
+
+            return
+        }
+
         initialize(this.engine)
     }
 
     restart() {
-        this.initialize()
+        initialize(this.engine)
         this.stop()
         this.start()
     }
@@ -45,5 +65,15 @@ export class Game {
     }
 }
 
-export const game = new Game()
-game.initialize()
+const externalStorage: ExternalStorage = {
+    getState: () => localStorage.getItem('game'),
+    setState: (state) => {
+        if (!state) {
+            localStorage.removeItem('game')
+        } else {
+            localStorage.setItem('game', state)
+        }
+    },
+}
+
+export const game = new Game(externalStorage)

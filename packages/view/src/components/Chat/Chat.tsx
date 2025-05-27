@@ -6,7 +6,7 @@ import styles from './Chat.module.scss'
 import { useGameData } from '@view/hooks/useGameData'
 import cn from 'classnames'
 import { ScenarioEntryType, translateProductStatus } from '@model'
-import { useAuthorizationStorage } from '@view/storageModule'
+import { useAuthorizationStorage } from '@view/storage'
 import { Paper } from '@view/ui/Paper'
 
 type ChatProps = {

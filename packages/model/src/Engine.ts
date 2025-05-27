@@ -366,7 +366,7 @@ export class Engine {
 
         const wrongCount = this.getWrongCount()
 
-        const isWinner = wrongCount < 1
+        const isWinner = wrongCount < 8
 
         return {
             approvedCount,
@@ -777,7 +777,7 @@ export class Engine {
     }
 
     serialize() {
-        return {
+        return JSON.stringify({
             productTable: this.productTable.serialize(),
             laptopTable: this.laptopTable.serialize(),
             refrigeratorTable: this.refrigeratorTable.serialize(),
@@ -793,25 +793,31 @@ export class Engine {
             time: this.time,
             end: this.end,
             maxTime: this.maxTime,
-        }
+        })
     }
 
-    parse(data: any) {
-        this.productTable.parse(data.productTable)
-        this.laptopTable.parse(data.laptopTable)
-        this.refrigeratorTable.parse(data.refrigeratorTable)
-        this.microwaveTable.parse(data.microwaveTable)
-        this.fanHeaterTable.parse(data.fanHeaterTable)
-        this.moderatorTable.parse(data.moderatorTable)
-        this.adminTable.parse(data.adminTable)
-        this.sellerTable.parse(data.sellerTable)
-        this.personTable.parse(data.personTable)
-        this.scenarioTable.parse(data.scenarioTable)
-        this.scenarioEntryTable.parse(data.scenarioEntryTable)
-        this.chatMessageTable.parse(data.chatMessageTable)
-        this.time = data.time
-        this.end = data.end
-        this.maxTime = data.maxTime
+    parse(data: string) {
+        try {
+            // TODO: validate parsed data
+            const parsedData = JSON.parse(data)
+            this.productTable.parse(parsedData.productTable)
+            this.laptopTable.parse(parsedData.laptopTable)
+            this.refrigeratorTable.parse(parsedData.refrigeratorTable)
+            this.microwaveTable.parse(parsedData.microwaveTable)
+            this.fanHeaterTable.parse(parsedData.fanHeaterTable)
+            this.moderatorTable.parse(parsedData.moderatorTable)
+            this.adminTable.parse(parsedData.adminTable)
+            this.sellerTable.parse(parsedData.sellerTable)
+            this.personTable.parse(parsedData.personTable)
+            this.scenarioTable.parse(parsedData.scenarioTable)
+            this.scenarioEntryTable.parse(parsedData.scenarioEntryTable)
+            this.chatMessageTable.parse(parsedData.chatMessageTable)
+            this.time = parsedData.time
+            this.end = parsedData.end
+            this.maxTime = parsedData.maxTime
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     private notifySubscribers() {
@@ -949,7 +955,7 @@ export class Engine {
         })
 
         if (nextEntry.type === ScenarioEntryType.SELLER_ADMIT) {
-            this.approveProduct(productId, product.moderatorId)
+            this.rejectProduct(productId, product.moderatorId)
         }
 
         if (nextEntry.type !== ScenarioEntryType.SELLER_IGNORE) {

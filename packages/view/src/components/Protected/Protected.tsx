@@ -1,4 +1,4 @@
-import { useAuthorizationStorage } from '@view/storageModule'
+import { useAuthorizationStorage } from '@view/storage'
 import { FC, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 

@@ -5,7 +5,7 @@ import styles from './RegisterForm.module.scss'
 import { Button } from '../Button'
 import { useNavigate } from 'react-router-dom'
 import { FC, useState } from 'react'
-import { useRegistrationStorage } from '@view/storageModule'
+import { useRegistrationStorage } from '@view/storage'
 import { Sex } from '@model/index'
 
 type RegisterFormProps = {

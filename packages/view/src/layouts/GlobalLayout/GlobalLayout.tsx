@@ -4,7 +4,7 @@ import { GlobalFooter } from './GlobalFooter'
 import { GlobalLayoutContext } from './GlobalLayoutContext'
 import styles from './GlobalLayout.module.scss'
 import { GameResultModal } from '@view/components/GameResultModal/GameResultModal'
-import { useAuthorizationStorage } from '@view/storageModule'
+import { useAuthorizationStorage } from '@view/storage'
 import { CSSProperties, ReactNode, useMemo, useState } from 'react'
 
 export const GlobalLayout = () => {

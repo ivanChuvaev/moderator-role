@@ -6,7 +6,7 @@ import styles from './LoginPage.module.scss'
 import { LoginForm } from '@view/components/LoginForm'
 import { Paper } from '@view/ui/Paper'
 import { Link } from 'react-router-dom'
-import { useRegistrationStorage } from '@view/storageModule'
+import { useRegistrationStorage } from '@view/storage'
 import { Button } from '@view/components/Button'
 
 interface LoginPageProps {

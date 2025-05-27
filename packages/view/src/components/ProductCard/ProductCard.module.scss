@@ -23,10 +23,10 @@
 }
 
 .info {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: auto min-content;
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
 }
 
 .info__name {
@@ -35,14 +35,13 @@
     margin-bottom: 8px;
 }
 
-.info__details {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.info__status {
+    justify-self: flex-end;
+    background-color: #f0f0f0;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    width: fit-content;
 }
 
 .info__category,
@@ -50,17 +49,20 @@
     background-color: #f0f0f0;
     padding: 4px 8px;
     border-radius: 4px;
+    grid-column: span 2;
+    width: fit-content;
+}
+
+.info__seller {
+    grid-column: span 2;
 }
 
 .info__actions {
+    align-self: flex-end;
     display: flex;
     gap: 8px;
     margin-top: 5px;
     margin-left: auto;
 }
 
-.info__status {
-    background-color: #f0f0f0;
-    padding: 4px 8px;
-    border-radius: 4px;
-}
+

@@ -8,7 +8,7 @@ import { FC, useState } from 'react'
 import {
     useAuthorizationStorage,
     useRegistrationStorage,
-} from '@view/storageModule'
+} from '@view/storage'
 import { game } from '@view/game'
 
 type LoginFormProps = {

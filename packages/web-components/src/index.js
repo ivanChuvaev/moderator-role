@@ -19,7 +19,6 @@ class RestrictionsRenderer extends HTMLElement {
                 list-style: none;
             }
             label {
-                background-color: red;
                 padding-inline: 4px;
                 font-size: 16px;
                 font-weight: bold;

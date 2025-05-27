@@ -3,7 +3,7 @@ import { PersonType } from '@model/enums/PersonType'
 import { Sex } from '@model/enums/Sex'
 import { ScenarioEntryType } from '@model/enums/ScenarioEntryType'
 import { ProductCategory } from '@model/enums/ProductCategory'
-import { registrationStorage } from '@view/storageModule'
+import { registrationStorage } from '@view/storage'
 
 export const scenarioA = (engine: Engine) => {
     const seller = engine.createPerson({

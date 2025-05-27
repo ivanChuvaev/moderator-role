@@ -11,6 +11,7 @@ export const GlobalFooter: FC = () => {
 
     const footerRef = useRef<HTMLDivElement>(null)
 
+    // Set global layout footer height
     useEffect(() => {
         const footer = footerRef.current
 

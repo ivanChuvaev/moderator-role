@@ -5,7 +5,7 @@ import { ModeratorCard } from '../ModeratorCard'
 import styles from './ModeratorsList.module.scss'
 import { useGameData } from '@view/hooks/useGameData'
 import cn from 'classnames'
-import { useAuthorizationStorage } from '@view/storageModule'
+import { useAuthorizationStorage } from '@view/storage'
 
 type ModeratorsListProps = {
     className?: string
