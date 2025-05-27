@@ -10,10 +10,13 @@
   },
   "dependencies": {
     "@base-ui-components/react": "^1.0.0-alpha.8",
+    "@moderator-role/web-components": "^1.0.0",
+    "@moderator-role/ui-footer": "^1.0.0",
     "classnames": "^2.5.1",
     "normalize.css": "^8.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.56.4",
     "react-router-dom": "^7.6.0"
   },
   "devDependencies": {

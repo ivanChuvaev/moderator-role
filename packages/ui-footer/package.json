@@ -1,0 +1,22 @@
+{
+  "name": "@moderator-role/ui-footer",
+  "version": "1.0.0",
+  "description": "Footer component built with react",
+  "main": "dist/ui-footer.min.js",
+  "files": [
+    "dist"
+  ],
+  "author": "Ivan Chuvaev",
+  "license": "MIT",
+  "private": true,
+  "types": "index.d.ts",
+  "scripts": {
+    "build": "node run/core.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.4"
+  },
+  "dependencies": {
+    "classnames": "^2.5.1"
+  }
+}

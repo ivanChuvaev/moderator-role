@@ -1,8 +1,10 @@
 import {
     getRestrictionsByCategory,
     ProductCategory,
-    translateProductCategory,
 } from '@model'
+import { Paper } from '@view/ui/Paper'
+
+import styles from './ProductCategoryRestrictions.module.scss'
 
 type ProductCategoryRestrictionsProps = {
     category: ProductCategory
@@ -13,11 +15,8 @@ export const ProductCategoryRestrictions = ({
 }: ProductCategoryRestrictionsProps) => {
     const restrictions = getRestrictionsByCategory(category)
     return (
-        <div>
-            Restrictions for {translateProductCategory(category)}
-            <div style={{ whiteSpace: 'pre-wrap' }}>
-                {JSON.stringify(restrictions, null, 2)}
-            </div>
-        </div>
+        <Paper className={styles['restrictions-paper']}>
+            <restrictions-renderer data={JSON.stringify(restrictions)} />
+        </Paper>
     )
 }

@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 import styles from './GlobalHeader.module.scss'
 import { Container } from '@view/ui/Container'
@@ -55,25 +55,27 @@ export const GlobalHeader: FC = () => {
         >
             <div>Moderator role game</div>
             <div className={styles['right-side']}>
-                <Button variant="secondary" onClick={handleEnd}>
-                    Завершить
-                </Button>
                 <span>
                     {time}/{maxTime}
                 </span>
+                <hr className={styles['vertical-separator']} />
                 <nav className={styles.header_nav}>
                     <ul>
-                        <Link to="/moderators">
-                            <li>Модераторы</li>
-                        </Link>
-                        <Link to="/chats">
-                            <li>Чаты</li>
-                        </Link>
-                        <Link to="/products">
-                            <li>Товары</li>
-                        </Link>
+                        <li>
+                            <NavLink to="/moderators">Модераторы</NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/chats">Чаты</NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/products">Товары</NavLink>
+                        </li>
                     </ul>
                 </nav>
+                <hr className={styles['vertical-separator']} />
+                <Button variant="secondary" onClick={handleEnd}>
+                    Завершить
+                </Button>
                 <Button variant="secondary" onClick={handleLogout}>
                     Выйти
                 </Button>

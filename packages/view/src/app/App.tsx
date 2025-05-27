@@ -9,6 +9,7 @@ import { ChatPage } from '@view/pages/ChatPage'
 import { LoginPage } from '@view/pages/LoginPage'
 import { RegisterPage } from '@view/pages/RegisterPage'
 import { ChatsPage } from '@view/pages/ChatsPage/ChatsPage'
+import { useRenderCount } from '@view/hooks/useRenderCount'
 
 const router = createBrowserRouter([
     {

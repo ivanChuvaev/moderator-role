@@ -33,4 +33,21 @@
 .header_nav a {
     color: var(--text-primary-inverted-color);
     text-decoration: none;
+    padding: 8px 0px;
+    border-radius: 4px;
+    transition: padding 0.2s ease-in-out;
+
+    &:global(.active) {
+        padding: 8px 16px;
+        background-color: rgb(255, 209, 0);
+        color: var(--text-primary-color);
+    }
+}
+
+.vertical-separator {
+    display: inline-block;
+    height: 22px;
+    border: none;
+    opacity: 0.2;
+    border-right: 1px solid var(--text-primary-inverted-color);
 }

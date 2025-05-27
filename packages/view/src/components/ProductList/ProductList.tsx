@@ -2,16 +2,21 @@ import { FC } from 'react'
 
 import { ProductCard } from '../ProductCard'
 
-import styles from './ProductList.module.scss'
 import { useGameData } from '@view/hooks/useGameData'
+import { filterProducts } from '@view/helpers/filterProducts'
 
 type ProductListProps = {
     className?: string
+    filters: any
 }
 
 export const ProductList: FC<ProductListProps> = (props) => {
-    const { className } = props
-    const products = useGameData((engine) => engine.getFullProducts())
+    const { className, filters } = props
+
+    const products = useGameData(
+        (engine) => filterProducts(engine.getFullProducts(), filters),
+        [filters]
+    )
 
     return (
         <div className={className}>

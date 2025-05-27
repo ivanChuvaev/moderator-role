@@ -1,0 +1,16 @@
+{
+  "name": "@moderator-role/web-components",
+  "version": "1.0.0",
+  "description": "UI components build with web components technologies",
+  "main": "dist/index.js",
+  "author": "Ivan Chuvaev",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "babel src -d dist"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.27.2",
+    "@babel/core": "^7.27.1"
+  }
+}
