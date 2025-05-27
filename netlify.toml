@@ -1,5 +1,5 @@
 [build]
-  command = "yarn workspace @moderator-role/view build"
+  command = "yarn build"
   publish = "packages/view/dist"
 
 [[redirects]]

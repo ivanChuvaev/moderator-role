@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Footer component built with react",
   "main": "dist/ui-footer.min.js",
+  "type": "module",
   "files": [
     "dist"
   ],
