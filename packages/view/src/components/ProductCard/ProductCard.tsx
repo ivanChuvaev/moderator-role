@@ -64,6 +64,9 @@ export const ProductCard: FC<ProductCardProps> = (props) => {
                 <div className={styles['info__category']}>
                     {translateProductCategory(product.category)}
                 </div>
+                <div className={styles['info__price']}>
+                    {product.price}$
+                </div>
                 {product.tags && product.tags.length > 0 && (
                     <div className={styles['info__tags']}>
                         {product.tags.join(', ')}
