@@ -52,6 +52,31 @@ export class RefrigeratorTable {
         this.refrigerators.delete(productId)
     }
 
+    getWrongFields(productId: string) {
+        const refrigerator = this.getRefrigerator(productId)
+        if (!refrigerator) return []
+
+        let wrongFields: string[] = []
+
+        for (const [key, restriction] of Object.entries(
+            refrigeratorRestrictions
+        )) {
+            const refrigeratorValue = refrigerator[
+                key as keyof Refrigerator
+            ] as number
+
+            const isCorrect =
+                refrigeratorValue >= restriction.min &&
+                refrigeratorValue <= restriction.max
+
+            if (!isCorrect) {
+                wrongFields.push(key)
+            }
+        }
+
+        return wrongFields
+    }
+
     isCorrect(productId: string): boolean {
         const refrigerator = this.getRefrigerator(productId)
         if (!refrigerator) return false

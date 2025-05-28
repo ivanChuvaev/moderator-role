@@ -58,6 +58,29 @@ export class MicrowaveTable {
         this.microwaves.delete(productId)
     }
 
+    getWrongFields(productId: string) {
+        const microwave = this.getMicrowave(productId)
+        if (!microwave) return []
+
+        let wrongFields: string[] = []
+
+        for (const [key, restriction] of Object.entries(
+            microwaveRestrictions
+        )) {
+            const microwaveValue = microwave[key as keyof Microwave] as number
+
+            const isCorrect =
+                microwaveValue >= restriction.min &&
+                microwaveValue <= restriction.max
+
+            if (!isCorrect) {
+                wrongFields.push(key)
+            }
+        }
+
+        return wrongFields
+    }
+
     isCorrect(productId: string): boolean {
         const microwave = this.getMicrowave(productId)
         if (!microwave) return false

@@ -7,6 +7,7 @@ import { GameResultModal } from '@view/components/GameResultModal/GameResultModa
 import { useAuthorizationStorage } from '@view/storage'
 import { CSSProperties, ReactNode, useMemo, useState } from 'react'
 import { HintDrawer } from '@view/components/HintDrawer'
+import { DevelopmentMode } from '@view/components/DevelopmentMode'
 
 export const GlobalLayout = () => {
     const [authorizedStorage] = useAuthorizationStorage()
@@ -40,19 +41,21 @@ export const GlobalLayout = () => {
 
     return (
         <GlobalLayoutContext.Provider value={providerValue}>
-            <HintDrawer>
-                <div
-                    className={styles['global-layout']}
-                    style={
-                        {
-                            '--global-layout-header-height': `${headerHeight}px`,
-                            '--global-layout-footer-height': `${footerHeight}px`,
-                        } as CSSProperties
-                    }
-                >
-                    {content}
-                </div>
-            </HintDrawer>
+            <DevelopmentMode>
+                <HintDrawer>
+                    <div
+                        className={styles['global-layout']}
+                        style={
+                            {
+                                '--global-layout-header-height': `${headerHeight}px`,
+                                '--global-layout-footer-height': `${footerHeight}px`,
+                            } as CSSProperties
+                        }
+                    >
+                        {content}
+                    </div>
+                </HintDrawer>
+            </DevelopmentMode>
         </GlobalLayoutContext.Provider>
     )
 }

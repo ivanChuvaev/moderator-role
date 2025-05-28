@@ -607,6 +607,25 @@ export class Engine {
         )
     }
 
+    getProductWrongFields(productId: string) {
+        const product = this.productTable.getProduct(productId)
+
+        if (!product) return []
+
+        switch (product.category) {
+            case ProductCategory.REFRIGERATOR:
+                return this.refrigeratorTable.getWrongFields(productId)
+            case ProductCategory.LAPTOP:
+                return this.laptopTable.getWrongFields(productId)
+            case ProductCategory.MICROWAVE:
+                return this.microwaveTable.getWrongFields(productId)
+            case ProductCategory.FAN_HEATER:
+                return this.fanHeaterTable.getWrongFields(productId)
+            default:
+                return []
+        }
+    }
+
     getWrongCount() {
         const products = this.productTable.getProducts()
         let count = 0

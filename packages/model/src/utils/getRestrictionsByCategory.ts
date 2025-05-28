@@ -6,7 +6,7 @@ import { ProductCategory } from '../enums/ProductCategory'
 
 export const getRestrictionsByCategory = (
     category: ProductCategory
-): Record<string, { min: number; max: number }> => {
+): Record<string, { min: number; max: number; translation: string }> => {
     switch (category) {
         case ProductCategory.LAPTOP:
             return laptopRestrictions

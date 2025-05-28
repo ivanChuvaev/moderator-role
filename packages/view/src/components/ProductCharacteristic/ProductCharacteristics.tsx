@@ -1,6 +1,8 @@
-import { ProductCategory } from '@model'
+import { getRestrictionsByCategory } from '@model'
 import { FullProduct } from '@model'
-import { ReactNode } from 'react'
+import { useMemo } from 'react'
+import { useGameData } from '@view/hooks/useGameData'
+import { useDevelopmentMode } from '@view/components/DevelopmentMode'
 
 type ProductCharacteristicsProps = {
     product: FullProduct
@@ -10,68 +12,27 @@ type ProductCharacteristicsProps = {
 export const ProductCharacteristics = (props: ProductCharacteristicsProps) => {
     const { product, className } = props
 
-    let content: ReactNode
+    const { isDevelopmentMode } = useDevelopmentMode()
 
-    switch (product.category) {
-        case ProductCategory.LAPTOP:
-            content = (
-                <>
-                    <div>Диагональ: {product.diagonal}</div>
-                    <div>Масса: {product.mass}</div>
-                    <div>Ширина: {product.width}</div>
-                    <div>Высота: {product.height}</div>
-                    <div>Мощность: {product.power}</div>
-                    <div>Оперативная память: {product.ram}</div>
-                </>
-            )
-            break
-        case ProductCategory.MICROWAVE:
-            content = (
-                <>
-                    <div>Мощность: {product.power}</div>
-                    <div>Объем: {product.volume}</div>
-                    <div>Масса: {product.mass}</div>
-                    <div>Ширина: {product.width}</div>
-                    <div>Высота: {product.height}</div>
-                    <div>Глубина: {product.depth}</div>
-                    <div>
-                        Максимальная температура: {product.maxTemperature}
-                    </div>
-                    <div>Частота: {product.microwaveFrequency}</div>
-                </>
-            )
-            break
-        case ProductCategory.FAN_HEATER:
-            content = (
-                <>
-                    <div>Мощность: {product.power}</div>
-                    <div>Масса: {product.mass}</div>
-                    <div>Ширина: {product.width}</div>
-                    <div>Высота: {product.height}</div>
-                    <div>Глубина: {product.depth}</div>
-                    <div>
-                        Максимальная температура: {product.maxTemperature}
-                    </div>
-                    <div>Площадь: {product.area}</div>
-                </>
-            )
-            break
-        case ProductCategory.REFRIGERATOR:
-            content = (
-                <>
-                    <div>Масса: {product.mass}</div>
-                    <div>Ширина: {product.width}</div>
-                    <div>Высота: {product.height}</div>
-                    <div>Глубина: {product.depth}</div>
-                    <div>Объем: {product.volume}</div>
-                </>
-            )
-            break
-        default:
-            content = null
-    }
+    const wrongFields = useGameData((engine) =>
+        engine.getProductWrongFields(product.id)
+    )
 
-    if (!content) return null
+    const restrictions = useMemo(
+        () => getRestrictionsByCategory(product.category),
+        [product]
+    )
 
-    return <div className={className}>{content}</div>
+    return (
+        <div className={className}>
+            {Object.entries(restrictions).map(([key, restriction]) => (
+                <div key={key}>
+                    {isDevelopmentMode && (
+                        <>{wrongFields.includes(key) ? '❌' : '✅'} </>
+                    )}
+                    {restriction.translation}: {(product as any)[key]}
+                </div>
+            ))}
+        </div>
+    )
 }

@@ -8,6 +8,8 @@ import { Button } from '@view/components/Button'
 import { useAuthorizationStorage } from '@view/storage/useAuthorizationStorage'
 import { useGlobalLayout } from './hooks/useGlobalLayout'
 import { ProductStatus } from '@model'
+import { useDevelopmentMode } from '@view/components/DevelopmentMode'
+import { Switch } from '@view/components/Switch/Switch'
 
 export const GlobalHeader: FC = () => {
     const time = useGameData((engine) => engine.getTime())
@@ -20,6 +22,7 @@ export const GlobalHeader: FC = () => {
         ).length
         return [total, checked]
     })
+    
     const chatsCount = useGameData((engine) => {
         return engine
             .getChats()
@@ -29,9 +32,12 @@ export const GlobalHeader: FC = () => {
     })
 
     const stopGame = useGameData((engine) => engine.stop)
+
     const headerRef = useRef<HTMLElement>(null)
 
     const [, setAuthorizationStorage] = useAuthorizationStorage()
+
+    const { isDevelopmentMode, setIsDevelopmentMode } = useDevelopmentMode()
 
     const { setHeaderHeight } = useGlobalLayout()
 
@@ -73,6 +79,10 @@ export const GlobalHeader: FC = () => {
         >
             <div>Moderator role game</div>
             <div className={styles['right-side']}>
+                <Switch
+                    checked={isDevelopmentMode}
+                    onCheckedChange={setIsDevelopmentMode}
+                />
                 <span>
                     Проверено: {checkedCount}/{productCount}
                 </span>

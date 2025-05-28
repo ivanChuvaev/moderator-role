@@ -1,4 +1,5 @@
 import { Laptop } from '../types/Laptop'
+import { microwaveRestrictions } from './MicrowaveTable'
 
 export const laptopRestrictions: Partial<
     Record<keyof Laptop, { min: number; max: number; translation: string }>
@@ -57,6 +58,26 @@ export class LaptopTable {
 
     removeLaptop(productId: string) {
         this.laptops.delete(productId)
+    }
+
+    getWrongFields(productId: string) {
+        const laptop = this.getLaptop(productId)
+        if (!laptop) return []
+
+        let wrongFields: string[] = []
+
+        for (const [key, restriction] of Object.entries(laptopRestrictions)) {
+            const laptopValue = laptop[key as keyof Laptop] as number
+
+            const isCorrect =
+                laptopValue >= restriction.min && laptopValue <= restriction.max
+
+            if (!isCorrect) {
+                wrongFields.push(key)
+            }
+        }
+
+        return wrongFields
     }
 
     isCorrect(productId: string): boolean {

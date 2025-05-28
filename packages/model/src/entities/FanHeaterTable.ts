@@ -59,6 +59,29 @@ export class FanHeaterTable {
         this.fanHeaters.delete(productId)
     }
 
+    getWrongFields(productId: string) {
+        const fanHeater = this.getFanHeater(productId)
+        if (!fanHeater) return []
+
+        let wrongFields: string[] = []
+
+        for (const [key, restriction] of Object.entries(
+            fanHeaterRestrictions
+        )) {
+            const fanHeaterValue = fanHeater[key as keyof FanHeater] as number
+
+            const isCorrect =
+                fanHeaterValue >= restriction.min &&
+                fanHeaterValue <= restriction.max
+
+            if (!isCorrect) {
+                wrongFields.push(key)
+            }
+        }
+
+        return wrongFields
+    }
+
     isCorrect(productId: string): boolean {
         const fanHeater = this.getFanHeater(productId)
         if (!fanHeater) return false
