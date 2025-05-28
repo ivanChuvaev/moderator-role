@@ -1,4 +1,4 @@
-import { FC, useId } from 'react'
+import { FC } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Button } from '../Button'
@@ -7,10 +7,10 @@ import styles from './ProductCard.module.scss'
 import { FullProduct, ProductStatus } from '@model'
 import { translateProductStatus, translateProductCategory } from '@model'
 import { Paper } from '@view/ui/Paper'
-import { ProductCharacteristics } from '@view/pages/ProductPage/ProductCharacteristics'
 import { useGameData } from '@view/hooks/useGameData'
 import { useAuthorizationStorage } from '@view/storage'
 import { useHintDrawer } from '@view/components/HintDrawer'
+import { ProductCharacteristics } from '../ProductCharacteristic'
 
 interface ProductCardProps {
     product: FullProduct
@@ -20,11 +20,6 @@ export const ProductCard: FC<ProductCardProps> = (props) => {
     const { product } = props
 
     const { setOpen, setCategory } = useHintDrawer()
-
-    const handleOpenHint = () => {
-        setCategory(product.category)
-        setOpen(true)
-    }
 
     const [authorizationStore] = useAuthorizationStorage()
 
@@ -37,25 +32,32 @@ export const ProductCard: FC<ProductCardProps> = (props) => {
     const approveProduct = useGameData((engine) => engine.approveProduct)
     const rejectProduct = useGameData((engine) => engine.rejectProduct)
 
-    const handleApprove = () => {
+    const handleApprove = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
         if (!product || !admin) return
         approveProduct(product.id, admin.id)
     }
 
-    const handleReject = () => {
+    const handleReject = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
         if (!product || !admin) return
         rejectProduct(product.id, admin.id)
     }
 
+    const handleOpenHint = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
+        if (!product) return
+        setCategory(product.category)
+        setOpen(true)
+    }
+
     return (
         <Paper className={styles['product-card']}>
-            <Link to={`/product/${product.id}`}>
-                <img
-                    className={styles.image}
-                    src={product.images[0] ?? '/images/empty.png'}
-                    alt="product"
-                />
-            </Link>
+            <img
+                className={styles.image}
+                src={product.images[0] ?? '/images/empty.png'}
+                alt="product"
+            />
             <div className={styles.info}>
                 <h3 className={styles['info__name']}>{product.name}</h3>
                 <div className={styles['info__status']}>
@@ -64,9 +66,7 @@ export const ProductCard: FC<ProductCardProps> = (props) => {
                 <div className={styles['info__category']}>
                     {translateProductCategory(product.category)}
                 </div>
-                <div className={styles['info__price']}>
-                    {product.price}$
-                </div>
+                <div className={styles['info__price']}>{product.price}$</div>
                 {product.tags && product.tags.length > 0 && (
                     <div className={styles['info__tags']}>
                         {product.tags.join(', ')}

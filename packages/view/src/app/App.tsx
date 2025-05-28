@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import { createBrowserRouter, replace, RouterProvider } from 'react-router-dom'
 
-import { ProductPage } from '@view/pages/ProductPage'
 import { ProductsPage } from '@view/pages/ProductsPage'
 import { GlobalLayout } from '@view/layouts/GlobalLayout'
 import { ModeratorsPage } from '@view/pages/ModeratorsPage'
@@ -30,10 +29,6 @@ const router = createBrowserRouter([
             {
                 path: '/products',
                 element: <ProductsPage />,
-            },
-            {
-                path: '/product/:id',
-                element: <ProductPage />,
             },
             {
                 path: '/moderators',
