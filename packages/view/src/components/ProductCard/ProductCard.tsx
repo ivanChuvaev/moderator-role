@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useId } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Button } from '../Button'
@@ -10,6 +10,7 @@ import { Paper } from '@view/ui/Paper'
 import { ProductCharacteristics } from '@view/pages/ProductPage/ProductCharacteristics'
 import { useGameData } from '@view/hooks/useGameData'
 import { useAuthorizationStorage } from '@view/storage'
+import { useHintDrawer } from '@view/components/HintDrawer'
 
 interface ProductCardProps {
     product: FullProduct
@@ -17,6 +18,13 @@ interface ProductCardProps {
 
 export const ProductCard: FC<ProductCardProps> = (props) => {
     const { product } = props
+
+    const { setOpen, setCategory } = useHintDrawer()
+
+    const handleOpenHint = () => {
+        setCategory(product.category)
+        setOpen(true)
+    }
 
     const [authorizationStore] = useAuthorizationStorage()
 
@@ -64,25 +72,29 @@ export const ProductCard: FC<ProductCardProps> = (props) => {
                 <div className={styles['info__seller']}>
                     {product.seller.firstName} {product.seller.lastName}
                 </div>
-                <ProductCharacteristics
-                    product={product}
-                    className={styles['characteristics']}
-                />
+                <div>
+                    <ProductCharacteristics
+                        product={product}
+                        className={styles['characteristics']}
+                    />
+                    <button type="button" onClick={handleOpenHint}>
+                        Подсказка
+                    </button>
+                </div>
                 <div className={styles['info__actions']}>
                     {product.hasMessages && (
                         <Link to={`/chats/${product.id}`}>
                             <Button>Чат</Button>
                         </Link>
                     )}
-                    {!product.hasMessages &&
-                        product.status === ProductStatus.PENDING && (
-                            <>
-                                <Button variant="danger" onClick={handleReject}>
-                                    Отклонить
-                                </Button>
-                                <Button onClick={handleApprove}>Принять</Button>
-                            </>
-                        )}
+                    {product.status === ProductStatus.PENDING && (
+                        <>
+                            <Button variant="danger" onClick={handleReject}>
+                                Отклонить
+                            </Button>
+                            <Button onClick={handleApprove}>Принять</Button>
+                        </>
+                    )}
                 </div>
             </div>
         </Paper>

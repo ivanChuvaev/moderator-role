@@ -1,31 +1,40 @@
 import { FanHeater } from '../types/FanHeater'
 
-export const fanHeaterRestrictions: Partial<Record<keyof FanHeater, any>> = {
+export const fanHeaterRestrictions: Partial<
+    Record<keyof FanHeater, { min: number; max: number; translation: string }>
+> = {
     area: {
+        translation: 'Площадь',
         min: 5,
         max: 15,
     },
     mass: {
+        translation: 'Масса',
         min: 0.2,
         max: 1.2,
     },
     power: {
+        translation: 'Мощность',
         min: 500,
         max: 1500,
     },
     maxTemperature: {
+        translation: 'Максимальная температура',
         min: 70,
         max: 150,
     },
     width: {
+        translation: 'Ширина',
         min: 10,
         max: 25,
     },
     height: {
+        translation: 'Высота',
         min: 15,
         max: 35,
     },
     depth: {
+        translation: 'Глубина',
         min: 10,
         max: 25,
     },

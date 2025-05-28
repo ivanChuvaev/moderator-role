@@ -1,31 +1,40 @@
 import { Microwave } from '../types/Microwave'
 
-export const microwaveRestrictions: Partial<Record<keyof Microwave, any>> = {
+export const microwaveRestrictions: Partial<
+    Record<keyof Microwave, { min: number; max: number; translation: string }>
+> = {
     volume: {
+        translation: 'Объем',
         min: 20,
         max: 30,
     },
     mass: {
+        translation: 'Масса',
         min: 8,
         max: 20,
     },
     power: {
+        translation: 'Мощность',
         min: 800,
         max: 1800,
     },
     microwaveFrequency: {
+        translation: 'Частота',
         min: 2400,
         max: 2500,
     },
     width: {
+        translation: 'Ширина',
         min: 44,
         max: 55,
     },
     height: {
+        translation: 'Высота',
         min: 30,
         max: 45,
     },
     depth: {
+        translation: 'Глубина',
         min: 25,
         max: 35,
     },

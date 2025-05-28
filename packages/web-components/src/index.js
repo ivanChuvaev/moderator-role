@@ -66,7 +66,8 @@ class RestrictionsRenderer extends HTMLElement {
                     data[key] === null ||
                     data[key] === undefined ||
                     !Object.keys(data[key]).includes('min') ||
-                    !Object.keys(data[key]).includes('max')
+                    !Object.keys(data[key]).includes('max') ||
+                    !Object.keys(data[key]).includes('translation')
                 ) {
                     delete data[key]
                 }
@@ -85,7 +86,7 @@ class RestrictionsRenderer extends HTMLElement {
         for (const key of Object.keys(data)) {
             content += `
                 <li>
-                    <label>${key}</label>
+                    <label>${data[key].translation}</label>
                     <span class="value"><span>${data[key].min}</span> - <span>${data[key].max}</span></span>
                 </li>
             `

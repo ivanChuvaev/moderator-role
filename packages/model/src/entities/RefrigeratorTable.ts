@@ -1,23 +1,33 @@
 import { Refrigerator } from '../types/Refrigerator'
 
-export const refrigeratorRestrictions: Partial<Record<keyof Refrigerator, any>> = {
+export const refrigeratorRestrictions: Partial<
+    Record<
+        keyof Refrigerator,
+        { min: number; max: number; translation: string }
+    >
+> = {
     width: {
+        translation: 'Ширина',
         min: 50,
         max: 70,
     },
     height: {
+        translation: 'Высота',
         min: 140,
         max: 180,
     },
     depth: {
+        translation: 'Глубина',
         min: 50,
         max: 70,
     },
     volume: {
+        translation: 'Объем',
         min: 100,
         max: 400,
     },
     mass: {
+        translation: 'Масса',
         min: 30,
         max: 80,
     },

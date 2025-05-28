@@ -6,6 +6,7 @@
   "author": "Ivan Chuvaev",
   "license": "MIT",
   "private": true,
+  "types": "./src/types.d.ts",
   "scripts": {
     "build": "babel src -d dist"
   },

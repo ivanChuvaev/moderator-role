@@ -6,6 +6,7 @@ import styles from './GlobalLayout.module.scss'
 import { GameResultModal } from '@view/components/GameResultModal/GameResultModal'
 import { useAuthorizationStorage } from '@view/storage'
 import { CSSProperties, ReactNode, useMemo, useState } from 'react'
+import { HintDrawer } from '@view/components/HintDrawer'
 
 export const GlobalLayout = () => {
     const [authorizedStorage] = useAuthorizationStorage()
@@ -39,17 +40,19 @@ export const GlobalLayout = () => {
 
     return (
         <GlobalLayoutContext.Provider value={providerValue}>
-            <div
-                className={styles['global-layout']}
-                style={
-                    {
-                        '--global-layout-header-height': `${headerHeight}px`,
-                        '--global-layout-footer-height': `${footerHeight}px`,
-                    } as CSSProperties
-                }
-            >
-                {content}
-            </div>
+            <HintDrawer>
+                <div
+                    className={styles['global-layout']}
+                    style={
+                        {
+                            '--global-layout-header-height': `${headerHeight}px`,
+                            '--global-layout-footer-height': `${footerHeight}px`,
+                        } as CSSProperties
+                    }
+                >
+                    {content}
+                </div>
+            </HintDrawer>
         </GlobalLayoutContext.Provider>
     )
 }
